@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.dao</a> &gt; <span class="el_source">UserDaoImpl.java</span></div><h1>UserDaoImpl.java</h1><pre class="source lang-java linenums">package com.ring.dao;
+
+import com.ring.bo.ClientBo;
+import com.ring.bo.SocialLoginBo;
+import com.ring.bo.UserProfileBo;
+import com.ring.constants.AppConstant;
+import com.ring.constants.GenderType;
+import com.ring.constants.LoginType;
+import com.ring.constants.Status;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+import com.ring.util.DaoUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Map;
+
+/**
+ * &lt;p&gt;
+ * Implementation class of SignUpDao interface. to provide services to the
+ * SignUpServiceImpl class.
+ * &lt;/p&gt;
+ */
+
+@Repository
+<span class="fc" id="L40">public class UserDaoImpl implements UserDao {</span>
+
+  /**
+   * Jdbc template.
+   */
+  @Autowired
+  JdbcTemplate jdbctemplate;
+
+  @Autowired
+  PasswordEncoder passwordEncoder;
+
+  private static final String USER_REGISTER_QUERY = &quot;INSERT INTO tbl_user(usr_login_id, usr_login_type, usr_user_name, &quot;
+      + &quot;usr_email,usr_rol_role_id, usr_password, usr_phone_number, usr_date_of_birth,usr_gender,&quot;
+      + &quot;usr_status, usr_created_user_id, usr_created_datetime,&quot;
+      + &quot;usr_lastmodified_user_id, usr_lastmodified_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;
+
+  private static final String SOCIAL_USER_REGISTER_QUERY = &quot;INSERT INTO &quot;
+      + &quot;tbl_user(usr_email,usr_login_id,usr_password,usr_user_name,&quot;
+      + &quot;usr_login_type,usr_status,usr_created_datetime,usr_lastmodified_datetime,&quot;
+      + &quot;usr_created_user_id,usr_lastmodified_user_id,usr_rol_role_id) &quot;
+      + &quot;VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (usr_login_id) DO NOTHING&quot;;
+
+  private static final String SOCIAL_USER_NO_EMAIL_REGISTER_QUERY = &quot;INSERT INTO &quot;
+      + &quot;tbl_user(usr_login_id,usr_password,usr_user_name,usr_login_type,&quot;
+      + &quot;usr_status,usr_created_datetime,usr_lastmodified_datetime,&quot;
+      + &quot;usr_created_user_id,usr_lastmodified_user_id,usr_rol_role_id) &quot;
+      + &quot;VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(usr_login_id) DO NOTHING&quot;;
+
+  private static final String REGISTER_CLIENT_QUERY = &quot;INSERT into oauth_client_details&quot;
+      + &quot;(client_id,client_secret) VALUES(?,?)&quot;
+      + &quot;ON CONFLICT (client_id) DO NOTHING&quot;;
+
+  private static final String GET_CLIENT_INFO = &quot;SELECT COUNT(*) FROM oauth_client_details&quot;
+      + &quot; WHERE client_id = ? &quot;;
+
+  private static final String GET_USER_INFO_QUERY = &quot;SELECT usr_user_name \&quot;userName\&quot;,&quot;
+      + &quot; usr_gender \&quot;gender\&quot;, usr_date_of_birth \&quot;dob\&quot;, usr_email \&quot;email\&quot;,&quot;
+      + &quot;usr_phone_number \&quot;phoneNumber\&quot;,usr_login_type \&quot;loginType\&quot; &quot;
+      + &quot;FROM tbl_user WHERE usr_user_id = ? AND usr_status = 'Active'&quot;;
+
+  private static final String GET_USER_INFO = &quot;SELECT COUNT(*) FROM tbl_user&quot;
+      + &quot; WHERE usr_user_id = ? &quot;;
+
+  /**
+   * logger.
+   */
+<span class="fc" id="L86">  private static final Logger LOGGER = LogManager</span>
+<span class="fc" id="L87">      .getLogger(UserDaoImpl.class);</span>
+
+  /**
+   * method to register a user if optional vin field is not given by user .
+   * 
+   * @throws RingException
+   */
+  @Override
+  public int registerUser(UserProfileBo signUpBo) throws RingException {
+<span class="nc" id="L96">    String password = passwordEncoder.encode(signUpBo.getPassword());</span>
+
+<span class="nc" id="L98">    KeyHolder holder = new GeneratedKeyHolder();</span>
+    try {
+<span class="nc" id="L100">      jdbctemplate.update(insertUser(signUpBo, password), holder);</span>
+<span class="nc" id="L101">      return (int) holder.getKeys().get(&quot;usr_user_id&quot;);</span>
+<span class="nc" id="L102">    } catch (DuplicateKeyException duplicateKeyException) {</span>
+<span class="nc" id="L103">      LOGGER.error(duplicateKeyException.getMessage());</span>
+<span class="nc" id="L104">      throw new RingException(RingErrorCode.RA_2004,</span>
+          RingResponseCode.OK);
+    }
+  }
+
+  private PreparedStatementCreator insertUser(UserProfileBo signUpBo,
+      String password) {
+<span class="pc" id="L111">    return new PreparedStatementCreator() {</span>
+      @Override
+      public PreparedStatement createPreparedStatement(Connection connection)
+          throws SQLException {
+<span class="fc" id="L115">        PreparedStatement ps = connection.prepareStatement(</span>
+            USER_REGISTER_QUERY,
+            Statement.RETURN_GENERATED_KEYS);
+<span class="fc" id="L118">        ps.setString(1, signUpBo.getLoginId().trim());</span>
+<span class="fc" id="L119">        ps.setString(2, LoginType.APPLICATION.getloginType());</span>
+<span class="fc" id="L120">        ps.setString(3, signUpBo.getUserName());</span>
+<span class="fc" id="L121">        ps.setString(4, signUpBo.getLoginId());</span>
+<span class="fc" id="L122">        ps.setInt(5, 1);</span>
+<span class="fc" id="L123">        ps.setString(6, password);</span>
+<span class="fc" id="L124">        ps.setString(7, signUpBo.getPhoneNumber());</span>
+<span class="fc" id="L125">        ps.setString(8, signUpBo.getDob());</span>
+<span class="fc" id="L126">        ps.setObject(9, signUpBo.getGender());</span>
+<span class="fc" id="L127">        ps.setString(10, Status.ACTIVE.getStatus());</span>
+<span class="fc" id="L128">        ps.setInt(11, AppConstant.ONE);</span>
+<span class="fc" id="L129">        ps.setString(12, DaoUtil.getDate());</span>
+<span class="fc" id="L130">        ps.setInt(13, AppConstant.ONE);</span>
+<span class="fc" id="L131">        ps.setString(14, DaoUtil.getDate());</span>
+<span class="fc" id="L132">        return ps;</span>
+      }
+    };
+  }
+
+  @Override
+  public void registerSocialUser(SocialLoginBo socialUserBo) {
+<span class="fc" id="L139">    String password = passwordEncoder</span>
+<span class="fc" id="L140">        .encode(&quot;RingAuto_&quot; + socialUserBo.getLoginId());</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">    if (socialUserBo.getEmail() == null) {</span>
+<span class="fc" id="L142">      jdbctemplate.update(SOCIAL_USER_NO_EMAIL_REGISTER_QUERY,</span>
+<span class="fc" id="L143">          socialUserBo.getLoginId(),</span>
+<span class="fc" id="L144">          password, socialUserBo.getUserName(),</span>
+<span class="fc" id="L145">          socialUserBo.getLoginType().getloginType(), Status.ACTIVE.getStatus(),</span>
+<span class="fc" id="L146">          DaoUtil.getDate(), DaoUtil.getDate(), AppConstant.ONE,</span>
+          AppConstant.ONE, AppConstant.ONE);
+    } else {
+<span class="fc" id="L149">      jdbctemplate.update(SOCIAL_USER_REGISTER_QUERY,</span>
+<span class="fc" id="L150">          socialUserBo.getEmail(),</span>
+<span class="fc" id="L151">          socialUserBo.getLoginId(), password, socialUserBo.getUserName(),</span>
+<span class="fc" id="L152">          socialUserBo.getLoginType().getloginType(), Status.ACTIVE.getStatus(),</span>
+<span class="fc" id="L153">          DaoUtil.getDate(), DaoUtil.getDate(), AppConstant.ONE,</span>
+          AppConstant.ONE, AppConstant.ONE);
+    }
+<span class="fc" id="L156">  }</span>
+
+  @Override
+  public void registerClient(ClientBo clientBo) {
+<span class="nc" id="L160">    jdbctemplate.update(REGISTER_CLIENT_QUERY, clientBo.getClientId(),</span>
+<span class="nc" id="L161">        clientBo.getClientSecret());</span>
+<span class="nc" id="L162">  }</span>
+
+  @Override
+  public Object getUserInfo(int userId) {
+<span class="nc" id="L166">    return jdbctemplate.queryForMap(GET_USER_INFO_QUERY, userId);</span>
+  }
+
+  public boolean getClientDetails(String clientId) {
+<span class="nc" id="L170">    int i = jdbctemplate.queryForObject(GET_CLIENT_INFO,</span>
+        new Object[]{clientId}, Integer.class);
+<span class="nc bnc" id="L172" title="All 2 branches missed.">    if (i &gt; AppConstant.ZERO) {</span>
+<span class="nc" id="L173">      return true;</span>
+    } else {
+<span class="nc" id="L175">      return false;</span>
+    }
+  }
+
+  @Override
+  public int getUserDetails(int userId) {
+<span class="nc" id="L181">    int i = jdbctemplate.queryForObject(GET_USER_INFO,</span>
+<span class="nc" id="L182">        new Object[]{userId}, Integer.class);</span>
+<span class="nc" id="L183">    return i;</span>
+
+  }
+
+  @Override
+  public int updateInfo(int userId, UserProfileBo userDetailsBo,
+      String query) {
+<span class="nc" id="L190">    return jdbctemplate.update(query, userDetailsBo.getUserName().trim(),</span>
+<span class="nc" id="L191">        DaoUtil.getDate(),</span>
+<span class="nc" id="L192">        userId);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

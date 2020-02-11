@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResponseUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.util</a> &gt; <span class="el_source">ResponseUtil.java</span></div><h1>ResponseUtil.java</h1><pre class="source lang-java linenums">package com.ring.util;
+
+import com.ring.bo.ResponseBo;
+import com.ring.bo.ResponseDataBo;
+import com.ring.exceptions.RingException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+
+import java.io.InputStream;
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+
+
+@ControllerAdvice
+<span class="nc" id="L19">public class ResponseUtil {</span>
+
+<span class="nc" id="L21">  private static final Logger LOGGER = LogManager.getLogger(ResponseUtil.class);</span>
+
+  private static Properties prop;
+
+  @PostConstruct
+  public void init() {
+<span class="nc" id="L27">    prop = new Properties();</span>
+    try {
+
+<span class="nc" id="L30">      InputStream messageProperties = RingException.class</span>
+<span class="nc" id="L31">          .getResourceAsStream(&quot;/response.properties&quot;);</span>
+<span class="nc" id="L32">      prop.load(messageProperties);</span>
+<span class="nc" id="L33">    } catch (Exception exception) {</span>
+<span class="nc" id="L34">      LOGGER.error(&quot;Property file not found or not properly loaded&quot;);</span>
+<span class="nc" id="L35">    }</span>
+<span class="nc" id="L36">  }</span>
+
+
+  public static ResponseDataBo genericResponseData(String messageCode,Object data) 
+      throws RingException {
+<span class="nc" id="L41">    ResponseDataBo responseDataBo = new ResponseDataBo();</span>
+<span class="nc" id="L42">    responseDataBo.setCode(Integer.parseInt(HttpStatus.OK.toString()));</span>
+<span class="nc" id="L43">    responseDataBo.setMessage(prop.getProperty(messageCode.replace(&quot;RM_&quot;, &quot;&quot;)));</span>
+<span class="nc" id="L44">    responseDataBo.setData(data);</span>
+<span class="nc" id="L45">    return responseDataBo;</span>
+  }
+
+
+  public static ResponseBo genericResponse(String messageCode) 
+      throws RingException {
+<span class="nc" id="L51">    ResponseBo responseBo = new ResponseBo();</span>
+<span class="nc" id="L52">    responseBo.setCode(Integer.parseInt(HttpStatus.OK.toString()));</span>
+<span class="nc" id="L53">    responseBo.setMessage(prop.getProperty(messageCode.replace(&quot;RM_&quot;, &quot;&quot;)));</span>
+<span class="nc" id="L54">    return responseBo;</span>
+  }
+
+  public static String genericMessage(String messageCode) 
+      throws RingException {
+<span class="nc" id="L59">    return prop.getProperty(messageCode.replace(&quot;RM_&quot;, &quot;&quot;));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

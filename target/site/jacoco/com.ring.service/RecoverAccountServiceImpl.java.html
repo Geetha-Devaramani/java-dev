@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecoverAccountServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.service</a> &gt; <span class="el_source">RecoverAccountServiceImpl.java</span></div><h1>RecoverAccountServiceImpl.java</h1><pre class="source lang-java linenums">package com.ring.service;
+
+import com.ring.bo.ResetCredentialsBo;
+import com.ring.bo.UserProfileBo;
+import com.ring.dao.RecoverAccountDao;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
+/**
+ * &lt;p&gt;
+ * Implementation class of ForgotPasswordService interface to provide services
+ * to the ForgotPasswordController class. Uses ForgotPasswordDao interface and
+ * its implementation class for database services.
+ * &lt;/p&gt;
+ */
+@Service(&quot;recoverAccountService&quot;)
+<span class="fc" id="L28">public class RecoverAccountServiceImpl implements RecoverAccountService {</span>
+  /**
+   * Dao object.
+   */
+  @Autowired
+  private RecoverAccountDao recoverAccountDao;
+
+  @Autowired
+  private EmailServiceImpl emailService;
+
+  @Override
+  public void sendMail(String email) throws RingException {
+<span class="fc" id="L40">    String token = DigestUtils</span>
+<span class="fc" id="L41">        .sha1Hex(String.valueOf(System.currentTimeMillis())</span>
+<span class="fc" id="L42">            + String.valueOf(UUID.randomUUID()));</span>
+    try {
+<span class="fc" id="L44">      UserProfileBo userData = recoverAccountDao.getUserInfoFromDb(email);</span>
+<span class="fc" id="L45">      emailService.sendUpdatePasswordLink(userData, token);</span>
+<span class="fc" id="L46">      recoverAccountDao.persistTokenInDb(userData.getUserId(), token);</span>
+<span class="fc" id="L47">    } catch (EmptyResultDataAccessException ex) {</span>
+<span class="fc" id="L48">      throw new RingException(RingErrorCode.RA_4001, RingResponseCode.OK);</span>
+<span class="fc" id="L49">    }</span>
+
+<span class="fc" id="L51">  }</span>
+
+  @Override
+  public void resetCredentials(ResetCredentialsBo resetCredentialsBo)
+      throws RingException {
+    try {
+<span class="fc" id="L57">      ResetCredentialsBo dataFromDb = recoverAccountDao</span>
+<span class="fc" id="L58">          .getDataBasedOnToken(resetCredentialsBo.getResetToken());</span>
+<span class="fc" id="L59">      checkTokenValidity(dataFromDb.getResetTokenId(),</span>
+<span class="fc" id="L60">          dataFromDb.getResetTokenExpTime());</span>
+<span class="fc" id="L61">      recoverAccountDao.resetPassword(resetCredentialsBo.getPassword(),dataFromDb);</span>
+<span class="fc" id="L62">    } catch (EmptyResultDataAccessException ex) {</span>
+<span class="fc" id="L63">      throw new RingException(RingErrorCode.RA_4003, RingResponseCode.OK);</span>
+<span class="fc" id="L64">    }</span>
+
+<span class="fc" id="L66">  }</span>
+
+  private void checkTokenValidity(int tokenId, String tokenExpiryTime)
+      throws RingException {
+<span class="fc" id="L70">    DateTimeFormatter formatter = DateTimeFormatter</span>
+<span class="fc" id="L71">        .ofPattern(&quot;yyyy-MM-dd hh:mm:ss a z&quot;);</span>
+<span class="fc" id="L72">    ZonedDateTime timeObj = ZonedDateTime.parse(tokenExpiryTime,formatter);</span>
+<span class="fc" id="L73">    ZonedDateTime now = ZonedDateTime.parse(formatter.format(ZonedDateTime.now()),formatter);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">    if (now.isAfter(timeObj.plusMinutes(30))) {</span>
+<span class="fc" id="L75">      recoverAccountDao.deactivateToken(tokenId);</span>
+<span class="fc" id="L76">      throw new RingException(RingErrorCode.RA_4003, RingResponseCode.OK);</span>
+    }
+<span class="fc" id="L78">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

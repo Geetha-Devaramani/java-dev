@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SavingBo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.bo</a> &gt; <span class="el_source">SavingBo.java</span></div><h1>SavingBo.java</h1><pre class="source lang-java linenums">package com.ring.bo;
+
+import com.ring.constants.PressureUnitType;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+@Component
+@Configuration
+<span class="nc" id="L11">public class SavingBo extends BaseBo {</span>
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -2045010289135697025L;
+
+  private double initialPressure;
+  private double targetPressure;
+  private PressureUnitType pressureUnitType;
+
+  @Value(&quot;${ring.savingMoneyPerPsi}&quot;)
+  private double  moneySaving;
+  @Value(&quot;${ring.savingCarbonEmissionPerPsi}&quot;)
+  private double  carbonSaving;
+
+  @Value(&quot;${ring.barConversionValue}&quot;)
+  private double barConversionValue;
+
+  @Value(&quot;${ring.kpaConversionValue}&quot;)
+  private double kpaConversionValue;
+
+
+  public double getInitialPressure() {
+<span class="nc" id="L35">    return initialPressure;</span>
+  }
+
+  public void setInitialPressure(double initialPressure) {
+<span class="nc" id="L39">    this.initialPressure = initialPressure;</span>
+<span class="nc" id="L40">  }</span>
+
+  public double getTargetPressure() {
+<span class="nc" id="L43">    return targetPressure;</span>
+  }
+
+  public void setTargetPressure(double targetPressure) {
+<span class="nc" id="L47">    this.targetPressure = targetPressure;</span>
+<span class="nc" id="L48">  }</span>
+
+  public PressureUnitType getPressureUnitType() {
+<span class="nc" id="L51">    return pressureUnitType;</span>
+  }
+
+  public void setPressureUnitType(PressureUnitType pressureUnitType) {
+<span class="nc" id="L55">    this.pressureUnitType = pressureUnitType;</span>
+<span class="nc" id="L56">  }</span>
+
+  public double getMoneySaving() {
+<span class="nc" id="L59">    return moneySaving;</span>
+  }
+
+  public void setMoneySaving(double moneySaving) {
+<span class="nc" id="L63">    this.moneySaving = moneySaving;</span>
+<span class="nc" id="L64">  }</span>
+
+  public double getCarbonSaving() {
+<span class="nc" id="L67">    return carbonSaving;</span>
+  }
+
+  public void setCarbonSaving(double carbonSaving) {
+<span class="nc" id="L71">    this.carbonSaving = carbonSaving;</span>
+<span class="nc" id="L72">  }</span>
+
+  public double getBarConversionValue() {
+<span class="nc" id="L75">    return barConversionValue;</span>
+  }
+
+  public void setBarConversionValue(double barConversionValue) {
+<span class="nc" id="L79">    this.barConversionValue = barConversionValue;</span>
+<span class="nc" id="L80">  }</span>
+
+  public double getKpaConversionValue() {
+<span class="nc" id="L83">    return kpaConversionValue;</span>
+  }
+
+  public void setKpaConversionValue(double kpaConversionValue) {
+<span class="nc" id="L87">    this.kpaConversionValue = kpaConversionValue;</span>
+<span class="nc" id="L88">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

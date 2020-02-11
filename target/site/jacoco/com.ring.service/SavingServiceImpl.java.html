@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SavingServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.service</a> &gt; <span class="el_source">SavingServiceImpl.java</span></div><h1>SavingServiceImpl.java</h1><pre class="source lang-java linenums">package com.ring.service;
+
+import com.ring.bo.SavingBo;
+import com.ring.constants.PressureUnitType;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+import com.ring.util.SavingUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+<span class="nc" id="L17">public class SavingServiceImpl implements SavingService{</span>
+
+  @Autowired
+  SavingBo savingData;
+
+  @Autowired
+  SavingUtil saving;
+
+  @Override
+  public Map&lt;String, Object&gt; getSavingData(double initialPressure, double targetPressure,
+      int userId, PressureUnitType pressureUnitType) throws RingException {
+<span class="nc" id="L28">    Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L29">    double changeInPressureData = (targetPressure - initialPressure);</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">    if(changeInPressureData &gt; 6){</span>
+<span class="nc" id="L31">      changeInPressureData = 6;</span>
+    }
+<span class="nc bnc" id="L33" title="All 2 branches missed.">    if(changeInPressureData &gt;= 0) {</span>
+<span class="nc" id="L34">      double convertedSavingDataInPsi = saving.convertPressure(pressureUnitType.getPresureType(), changeInPressureData);</span>
+<span class="nc" id="L35">      String savedMoney = String.valueOf(SavingUtil.round(convertedSavingDataInPsi*savingData.getMoneySaving(),2));</span>
+<span class="nc" id="L36">      String savedCarbonData = String.valueOf(SavingUtil.round(convertedSavingDataInPsi*savingData.getCarbonSaving(),2));</span>
+<span class="nc" id="L37">      map.put(&quot;moneySaved&quot;,savedMoney);</span>
+<span class="nc" id="L38">      map.put(&quot;carbonSaving&quot;,savedCarbonData);</span>
+<span class="nc" id="L39">    } else {</span>
+<span class="nc" id="L40">      throw new RingException(RingErrorCode.RA_7000, RingResponseCode.OK);</span>
+    }
+<span class="nc" id="L42">    return map;</span>
+  }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

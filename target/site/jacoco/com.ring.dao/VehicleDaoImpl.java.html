@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.dao</a> &gt; <span class="el_source">VehicleDaoImpl.java</span></div><h1>VehicleDaoImpl.java</h1><pre class="source lang-java linenums">package com.ring.dao;
+
+import com.ring.bo.PressureBo;
+import com.ring.bo.VehicleAutoDataBo;
+import com.ring.bo.VehicleBo;
+import com.ring.constants.AppConstant;
+import com.ring.constants.LoadType;
+import com.ring.constants.PressureUnitType;
+import com.ring.constants.Status;
+import com.ring.dao.util.QueryBuilder;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+import com.ring.util.DaoUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+@Repository
+<span class="nc" id="L38">public class VehicleDaoImpl implements VehicleDao {</span>
+
+  @Autowired
+  JdbcTemplate jdbctemplate;
+
+  @Autowired
+  DaoUtil daoUtil;
+
+  @Autowired
+  QueryBuilder queryBuilder;
+
+  private static final String ADD_VEHICLE_QUERY_ONE = &quot;INSERT INTO tbl_vehicle_details(vd_user_id,vd_vehicle_name,&quot;
+      + &quot;vd_registration_number, vd_vin, vd_vehicle_maker,vd_vehicle_model, &quot;
+      + &quot;vd_vehicle_year_of_manf,&quot;
+      + &quot;vd_is_default, vd_status, vd_created_user_id,vd_created_datetime, &quot;
+      + &quot;vd_lastmodified_user_id,vd_lastmodified_datetime,vd_body_style) &quot;
+      + &quot;VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?)&quot;;
+  private static final String ADD_PRESSURE_SETTING = &quot;INSERT INTO tbl_pressure_setting(ps_front_tyre_pressur, ps_rear_tyre_pressur,&quot;
+      + &quot;ps_pressure_type,ps_tyre_size,ps_pressure_units,&quot;
+      + &quot; ps_created_user_id, ps_lastmodified_user_id,isdefault)VALUES (?, ?, ?, ?, ?, ?, ? , ?)&quot;;
+
+  private static final String ADD_VEHICLE_PRESSURE_SETTING = &quot;INSERT INTO tbl_vehicle_pressure_setting(vps_pressure_setting_id,&quot;
+      + &quot;vps_vehical_id,vps_created_user_id,vps_created_datetime, &quot;
+      + &quot;vps_lastmodified_user_id, vps_lastmodified_datetime, vps_pressure_type) VALUES ( ?, ?, ?, ?, ?, ?, ?)&quot;;
+
+  private static final String GET_DEFAULT_VEHICLE_ID_QUERY = &quot;SELECT vd_vehical_id FROM tbl_vehicle_details WHERE vd_is_default=TRUE AND vd_status ='Active' AND vd_user_id=? &quot;;
+
+  private static final String PUT_DEFAULT_STATUS_VEHICLE_QUERY = &quot;update tbl_vehicle_details set vd_is_default=?,vd_lastmodified_datetime=? where vd_vehical_id=?&quot;;
+
+  private static final String DELETE_VEHICLE = &quot;UPDATE tbl_vehicle_details SET &quot;
+      + &quot;vd_status=?,vd_is_default=?,vd_lastmodified_user_id=?,&quot;
+      + &quot;vd_lastmodified_datetime=? WHERE vd_vehical_id =?&quot;;
+
+  private static final String GET_PRESSURE_ID = &quot;SELECT vps_pressure_setting_id FROM &quot;
+      + &quot;tbl_vehicle_pressure_setting WHERE vps_vehical_id = ? AND vps_pressure_type=?&quot;;
+
+  private static final String GET_LIST_OF_VEHICLES = &quot;SELECT vd_vehical_id \&quot;vehicleId\&quot;, vd_vehicle_name \&quot;vehicleName\&quot;,&quot;
+      + &quot;vd_registration_number \&quot;registrationNumber\&quot;, vd_vin \&quot;vin\&quot;, vd_vehicle_maker \&quot;carMake\&quot;, vd_vehicle_model \&quot;carModel\&quot;, &quot;
+      + &quot;vd_vehicle_year_of_manf \&quot;yearOfManufacture\&quot;, vd_body_style \&quot;bodyStyle\&quot;, &quot;
+      + &quot;vd_is_default \&quot;isDefault\&quot; FROM tbl_vehicle_details where vd_user_id = ? AND vd_status ='Active'&quot;;
+
+  private static final String VEHICLE_ENTRY = &quot;SELECT vd_vehicle_name,vd_registration_number,vd_vin&quot;
+      + &quot; FROM tbl_vehicle_details WHERE vd_user_id=? AND vd_status ='Active'&quot;;
+
+  private static final String GET_VEHICLE = &quot;SELECT vd_vehical_id \&quot;vehicleId\&quot;,&quot;
+      + &quot;vd_vehicle_name \&quot;vehicleName\&quot;,&quot;
+      + &quot;vd_registration_number \&quot;registrationNumber\&quot;, vd_vin \&quot;vin\&quot;, vd_vehicle_maker \&quot;carMake\&quot;, vd_vehicle_model \&quot;carModel\&quot;, &quot;
+      + &quot;vd_vehicle_year_of_manf \&quot;yearOfManufacture\&quot;, vd_body_style \&quot;bodyStyle\&quot;, &quot;
+      + &quot;vd_is_default \&quot;isDefault\&quot; FROM tbl_vehicle_details where vd_vehical_id = ? AND vd_status ='Active'&quot;;
+
+  private static final String GET_VEHICLE_NAME = &quot;SELECT vd_vehicle_name from tbl_vehicle_details WHERE &quot;
+      + &quot;vd_vehicle_name LIKE 'Vehicle%' &quot;
+      + &quot;AND (vd_status ='Active' AND vd_user_id= ?) &quot;
+      + &quot;ORDER BY vd_vehicle_name; &quot;;
+
+  private static final String GET_VEHICLE_LOAD_DATA = &quot; SELECT ps.ps_front_tyre_pressur&quot;
+      + &quot; \&quot;frontTyrePressure\&quot;, ps.ps_rear_tyre_pressur \&quot;rearTyrePressure\&quot;,ps.ps_tyre_size \&quot;tyreSize\&quot;, ps.ps_pressure_type \&quot;loadType\&quot;, &quot;
+      + &quot;ps.ps_pressure_units \&quot;pressureUnitType\&quot; , ps.isdefault \&quot;defaultLoad\&quot; FROM tbl_pressure_setting ps INNER JOIN &quot;
+      + &quot;tbl_vehicle_pressure_setting vps ON &quot;
+      + &quot;vps.vps_pressure_setting_id = ps.ps_pressure_setting_id WHERE vps.vps_vehical_id = ? ORDER BY ps.isdefault DESC&quot;;
+
+  private static final String GET_OTHER_VEHICLE_LIST = &quot;SELECT vd_vehicle_name, &quot;
+      + &quot;vd_registration_number, vd_vin FROM tbl_vehicle_details &quot;
+      + &quot;WHERE vd_vehical_id &lt;&gt; ? AND vd_user_id = ? AND vd_status ='Active'&quot;;
+
+  private static final String VEHICLE_AUTODATA_QUERY = &quot;INSERT INTO tbl_autodata_field(ad_vehical_id, &quot;
+      + &quot;ad_autodata_manufacturer_id, ad_autodata_model_id, &quot;
+      + &quot;ad_mid, ad_tyre_pressure_id) VALUES (?, ?, ?, ?, ?)&quot;;
+
+  private static final String GET_VEHICLE_AUTODATA = &quot;SELECT  ad_autodata_manufacturer_id  \&quot;manufacturerId\&quot;, &quot;
+      + &quot;ad_autodata_model_id  \&quot;modelId\&quot;,ad_mid  \&quot;mId\&quot;, ad_tyre_pressure_id  \&quot;tyrePressureId\&quot;&quot;
+      + &quot;FROM tbl_autodata_field WHERE ad_vehical_id = ?&quot;;
+
+  private static final String UPDATE_VEHICLE_AUTODATA = &quot;UPDATE tbl_autodata_field SET &quot;
+      + &quot;ad_autodata_manufacturer_id=?, ad_autodata_model_id=?, ad_mid=?, &quot;
+      + &quot;ad_tyre_pressure_id=? WHERE ad_vehical_id=?;&quot;;
+
+  private static final String GET_DEFAULT_LOAD_PRESSURE_ID = &quot;SELECT ps_pressure_setting_id &quot;
+      + &quot;FROM tbl_pressure_setting WHERE ps_pressure_setting_id IN (?,?,?) &quot;
+      + &quot;AND isdefault = 't'&quot;;
+
+  private static final String UPDATE_DEFAULT_LOAD_STATUS = &quot;UPDATE tbl_pressure_setting SET &quot;
+      + &quot;ps_lastmodified_user_id=?, isdefault=? WHERE ps_pressure_setting_id=?&quot;;
+
+  private static final String GET_PRESSURE_IDS = &quot;SELECT vps_pressure_setting_id FROM &quot;
+      + &quot;tbl_vehicle_pressure_setting WHERE vps_vehical_id = ?&quot;;
+
+  @Transactional
+  @Override
+  public Map&lt;String, Object&gt; addVehicle(int userId,
+      VehicleBo vehicleDetails) throws RingException {
+<span class="nc" id="L129">    Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L130">    KeyHolder holder = new GeneratedKeyHolder();</span>
+    try {
+<span class="nc" id="L132">      daoUtil.validateIdFromTable(userId, &quot;usr_user_id&quot;, &quot;tbl_user&quot;);</span>
+<span class="nc" id="L133">      jdbctemplate.update(insertVehicle(userId,</span>
+<span class="nc" id="L134">          validateDefaultVehicle(userId, vehicleDetails)), holder);</span>
+<span class="nc" id="L135">      int vehicleId = (int) holder.getKeys().get(&quot;vd_vehical_id&quot;);</span>
+<span class="nc" id="L136">      map.put(&quot;vehicleId&quot;, vehicleId);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">      if (vehicleDetails.getVehicleAutoData() != null) {</span>
+<span class="nc" id="L138">        insertVehicleAutoData(vehicleDetails, vehicleId);</span>
+<span class="nc" id="L139">        insertPresuresetting(userId, vehicleDetails, vehicleId);</span>
+      } else {
+<span class="nc" id="L141">        insertPresuresetting(userId, vehicleDetails, vehicleId);</span>
+      }
+
+<span class="nc" id="L144">    } catch (InvalidDataAccessApiUsageException ex) {</span>
+<span class="nc" id="L145">      throw ex;</span>
+<span class="nc" id="L146">    } catch (DataAccessException e) {</span>
+<span class="nc" id="L147">      throw new RingException(RingErrorCode.RA_3017, RingResponseCode.OK);</span>
+<span class="nc" id="L148">    }</span>
+
+<span class="nc" id="L150">    return map;</span>
+
+  }
+
+  private void insertPresuresetting(int userId, VehicleBo vehicleDetails,
+      int vehicleId) throws RingException {
+
+<span class="nc" id="L157">    PressureBo mockPressureData = new PressureBo();</span>
+<span class="nc" id="L158">    mockPressureData.setFrontTyrePressure(AppConstant.DEFAULT_VALUE);</span>
+<span class="nc" id="L159">    mockPressureData.setRearTyrePressure(AppConstant.DEFAULT_VALUE);</span>
+<span class="nc" id="L160">    mockPressureData.setPressureUnitType(PressureUnitType.PSI);</span>
+<span class="nc" id="L161">    mockPressureData.setTyreSize(AppConstant.NA);</span>
+<span class="nc" id="L162">    Arrays.asList(LoadType.values()).stream()</span>
+<span class="nc" id="L163">        .filter(loadType -&gt; vehicleDetails.getLoad().stream()</span>
+<span class="nc" id="L164">            .allMatch(pressureBo -&gt; {</span>
+<span class="nc" id="L165">              if (pressureBo.getLoadType().name()</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">                  .equalsIgnoreCase(loadType.name())) {</span>
+<span class="nc" id="L167">                int pressureSettingId = updatePressure(userId, pressureBo);</span>
+<span class="nc" id="L168">                updateVehiclePressureSetting(userId, vehicleId,</span>
+                    pressureSettingId, loadType);
+<span class="nc" id="L170">                return false;</span>
+              }
+<span class="nc" id="L172">              return true;</span>
+            }))
+<span class="nc" id="L174">        .forEach(loadType -&gt; {</span>
+<span class="nc" id="L175">          mockPressureData.setLoadType(loadType);</span>
+<span class="nc" id="L176">          mockPressureData.setDefaultLoad(false);</span>
+<span class="nc" id="L177">          int pressureSettingId = updatePressure(userId, mockPressureData);</span>
+<span class="nc" id="L178">          updateVehiclePressureSetting(userId, vehicleId, pressureSettingId,</span>
+              loadType);
+<span class="nc" id="L180">        });</span>
+
+<span class="nc" id="L182">  }</span>
+
+  private VehicleBo validateDefaultVehicle(int userId, VehicleBo vehicleDetails)
+      throws RingException {
+<span class="nc" id="L186">    List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles = jdbctemplate</span>
+<span class="nc" id="L187">        .queryForList(VEHICLE_ENTRY, new Object[]{userId});</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">    if (listOfVehicles.size() &gt; AppConstant.ZERO) {</span>
+<span class="nc" id="L189">      validateDuplicateData(userId, vehicleDetails, listOfVehicles);</span>
+<span class="nc" id="L190">      vehicleDetails.setDefault(false);</span>
+    } else {
+<span class="nc" id="L192">      vehicleDetails.setDefault(true);</span>
+    }
+<span class="nc" id="L194">    return vehicleDetails;</span>
+  }
+
+  private PreparedStatementCreator insertVehicle(int userId,
+      VehicleBo vehicleDetails) throws RingException {
+<span class="pc" id="L199">    return new PreparedStatementCreator() {</span>
+<span class="fc" id="L200">      PreparedStatement ps = null;</span>
+      @Override
+      public PreparedStatement createPreparedStatement(Connection connection)
+          throws SQLException {
+        try {
+<span class="fc" id="L205">          ps = connection.prepareStatement(</span>
+              ADD_VEHICLE_QUERY_ONE,
+              Statement.RETURN_GENERATED_KEYS);
+<span class="fc" id="L208">          ps.setInt(1, userId);</span>
+<span class="fc" id="L209">          String vehicleName = vehicleDetails.getVehicleName();</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">          if (vehicleName == null) {</span>
+<span class="nc" id="L211">            Map&lt;String, String&gt; vehicleMap = getVehicleName(userId);</span>
+<span class="nc" id="L212">            Map.Entry&lt;String, String&gt; entry = vehicleMap.entrySet().iterator()</span>
+<span class="nc" id="L213">                .next();</span>
+<span class="nc" id="L214">            vehicleName = entry.getKey();</span>
+          }
+<span class="fc" id="L216">          ps.setString(2, vehicleName);</span>
+<span class="fc" id="L217">          ps.setString(3, vehicleDetails.getRegistrationNumber());</span>
+<span class="fc" id="L218">          ps.setString(4, vehicleDetails.getVin());</span>
+<span class="fc" id="L219">          ps.setString(5, vehicleDetails.getCarMake());</span>
+<span class="fc" id="L220">          ps.setString(6, vehicleDetails.getCarModel());</span>
+<span class="fc" id="L221">          ps.setString(7, vehicleDetails.getYearOfManufacture());</span>
+<span class="fc" id="L222">          ps.setBoolean(8, vehicleDetails.isDefault());</span>
+<span class="fc" id="L223">          ps.setString(9, Status.ACTIVE.getStatus());</span>
+<span class="fc" id="L224">          ps.setInt(10, userId);</span>
+<span class="fc" id="L225">          ps.setString(11, DaoUtil.getDate());</span>
+<span class="fc" id="L226">          ps.setInt(12, userId);</span>
+<span class="fc" id="L227">          ps.setString(13, DaoUtil.getDate());</span>
+<span class="fc" id="L228">          ps.setString(14, vehicleDetails.getBodyStyle());</span>
+
+<span class="nc" id="L230">        } catch (Exception ex) {</span>
+<span class="nc" id="L231">          throw ex;</span>
+
+<span class="fc" id="L233">        }</span>
+<span class="fc" id="L234">        return ps;</span>
+      }
+    };
+  }
+
+  private int insertVehicleAutoData(VehicleBo vehicleAutoDataDetails,
+      int vehicleId) throws RingException {
+
+<span class="nc" id="L242">    KeyHolder holder = new GeneratedKeyHolder();</span>
+<span class="pc" id="L243">    jdbctemplate.update(new PreparedStatementCreator() {</span>
+<span class="fc" id="L244">      PreparedStatement ps = null;</span>
+      @Override
+      public PreparedStatement createPreparedStatement(Connection connection)
+          throws SQLException {
+        try {
+<span class="fc" id="L249">          ps = connection.prepareStatement(</span>
+              VEHICLE_AUTODATA_QUERY,
+              Statement.RETURN_GENERATED_KEYS);
+<span class="fc" id="L252">          ps.setInt(1, vehicleId);</span>
+<span class="fc" id="L253">          ps.setString(2, vehicleAutoDataDetails.getVehicleAutoData()</span>
+<span class="fc" id="L254">              .getManufacturerId());</span>
+<span class="fc" id="L255">          ps.setString(3,</span>
+<span class="fc" id="L256">              vehicleAutoDataDetails.getVehicleAutoData().getModelId());</span>
+<span class="fc" id="L257">          ps.setString(4,</span>
+<span class="fc" id="L258">              vehicleAutoDataDetails.getVehicleAutoData().getmId());</span>
+<span class="fc" id="L259">          ps.setString(5, vehicleAutoDataDetails.getVehicleAutoData()</span>
+<span class="fc" id="L260">              .getTyrePressureId());</span>
+<span class="nc" id="L261">        } catch (Exception ex) {</span>
+<span class="nc" id="L262">          throw ex;</span>
+
+<span class="fc" id="L264">        }</span>
+<span class="fc" id="L265">        return ps;</span>
+      }
+    }, holder);
+<span class="nc" id="L268">    return (int) holder.getKeys().get(&quot;ad_autodata_id&quot;);</span>
+  }
+
+  private int updatePressure(int userId,
+      PressureBo pressureDetails) {
+<span class="nc" id="L273">    KeyHolder holder = new GeneratedKeyHolder();</span>
+
+<span class="pc" id="L275">    jdbctemplate.update(new PreparedStatementCreator() {</span>
+<span class="fc" id="L276">      PreparedStatement ps = null;</span>
+      @Override
+      public PreparedStatement createPreparedStatement(Connection connection)
+          throws SQLException {
+<span class="fc" id="L280">        ps = connection.prepareStatement(ADD_PRESSURE_SETTING,</span>
+            Statement.RETURN_GENERATED_KEYS);
+<span class="fc" id="L282">        ps.setDouble(1, pressureDetails.getFrontTyrePressure());</span>
+<span class="fc" id="L283">        ps.setDouble(2, pressureDetails.getRearTyrePressure());</span>
+<span class="fc" id="L284">        ps.setString(3, pressureDetails.getLoadType().getLoadType());</span>
+<span class="fc" id="L285">        ps.setString(4, pressureDetails.getTyreSize());</span>
+
+<span class="fc" id="L287">        ps.setString(5,</span>
+<span class="fc" id="L288">            pressureDetails.getPressureUnitType().getPresureType());</span>
+<span class="fc" id="L289">        ps.setInt(6, userId);</span>
+<span class="fc" id="L290">        ps.setInt(7, userId);</span>
+<span class="fc" id="L291">        ps.setBoolean(8, pressureDetails.getDefaultLoad());</span>
+<span class="fc" id="L292">        return ps;</span>
+      }
+    }, holder);
+
+<span class="nc" id="L296">    return (int) holder.getKeys().get(&quot;ps_pressure_setting_id&quot;);</span>
+
+  }
+
+  private void updateVehiclePressureSetting(int userId, int vehicleId,
+      int pressureSettingId, LoadType loadType) {
+<span class="nc" id="L302">    KeyHolder holder = new GeneratedKeyHolder();</span>
+
+<span class="pc" id="L304">    jdbctemplate.update(new PreparedStatementCreator() {</span>
+      @Override
+      public PreparedStatement createPreparedStatement(Connection connection)
+          throws SQLException {
+<span class="fc" id="L308">        PreparedStatement ps = connection.prepareStatement(</span>
+            ADD_VEHICLE_PRESSURE_SETTING,
+            Statement.RETURN_GENERATED_KEYS);
+<span class="fc" id="L311">        ps.setInt(1, pressureSettingId);</span>
+<span class="fc" id="L312">        ps.setInt(2, vehicleId);</span>
+<span class="fc" id="L313">        ps.setInt(3, userId);</span>
+<span class="fc" id="L314">        ps.setString(4, DaoUtil.getDate());</span>
+<span class="fc" id="L315">        ps.setInt(5, userId);</span>
+<span class="fc" id="L316">        ps.setString(6, DaoUtil.getDate());</span>
+<span class="fc" id="L317">        ps.setString(7, loadType.getLoadType());</span>
+<span class="fc" id="L318">        return ps;</span>
+      }
+    }, holder);
+
+<span class="nc" id="L322">  }</span>
+  private void validateDuplicateData(int userId,
+      VehicleBo vehicleDetails, List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles)
+      throws RingException {
+<span class="nc bnc" id="L326" title="All 2 branches missed.">    if (listOfVehicles.size() &lt; AppConstant.FIVE) {</span>
+<span class="nc" id="L327">      validateFields(vehicleDetails, listOfVehicles);</span>
+    } else {
+<span class="nc" id="L329">      throw new RingException(RingErrorCode.RA_3014,</span>
+          RingResponseCode.OK);
+
+    }
+<span class="nc" id="L333">  }</span>
+
+  private Map&lt;String, String&gt; getVehicleName(int userId) {
+<span class="nc" id="L336">    List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles = jdbctemplate</span>
+<span class="nc" id="L337">        .queryForList(GET_VEHICLE_NAME, new Object[]{userId});</span>
+<span class="nc" id="L338">    Map&lt;String, String&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L339">    map.put(&quot;Vehicle1&quot;, &quot;Vehicle1&quot;);</span>
+<span class="nc" id="L340">    map.put(&quot;Vehicle2&quot;, &quot;Vehicle2&quot;);</span>
+<span class="nc" id="L341">    map.put(&quot;Vehicle3&quot;, &quot;Vehicle3&quot;);</span>
+<span class="nc" id="L342">    map.put(&quot;Vehicle4&quot;, &quot;Vehicle4&quot;);</span>
+<span class="nc" id="L343">    map.put(&quot;Vehicle5&quot;, &quot;Vehicle5&quot;);</span>
+<span class="nc bnc" id="L344" title="All 2 branches missed.">    for (Map&lt;String, Object&gt; vehicleMap : listOfVehicles) {</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">      if (map.containsKey(vehicleMap.get(&quot;vd_vehicle_name&quot;))) {</span>
+<span class="nc" id="L346">        map.remove(vehicleMap.get(&quot;vd_vehicle_name&quot;));</span>
+      }
+<span class="nc" id="L348">    }</span>
+<span class="nc" id="L349">    return map;</span>
+
+  }
+
+  static RingException ringException;
+
+  private void validateFields(VehicleBo vehicleDetails,
+      List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles) throws RingException {
+
+<span class="nc" id="L358">    ringException = null;</span>
+
+<span class="nc" id="L360">    Map&lt;Boolean, Runnable&gt; map = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L361">    map.put(listOfVehicles.stream()</span>
+<span class="nc" id="L362">        .anyMatch(vehicleInfoMap -&gt; String</span>
+<span class="nc" id="L363">            .valueOf(vehicleInfoMap.get(&quot;vd_vin&quot;))</span>
+<span class="nc" id="L364">            .equalsIgnoreCase(vehicleDetails.getVin())),</span>
+<span class="nc" id="L365">        () -&gt; ringException = new RingException(RingErrorCode.RA_3008,</span>
+            RingResponseCode.OK));
+<span class="nc" id="L367">    map.put(listOfVehicles.stream()</span>
+<span class="nc" id="L368">        .anyMatch(vehicleInfoMap -&gt; {</span>
+<span class="nc" id="L369">          String regNo = String</span>
+<span class="nc" id="L370">              .valueOf(vehicleInfoMap.get(&quot;vd_registration_number&quot;));</span>
+<span class="nc bnc" id="L371" title="All 4 branches missed.">          return regNo != null &amp;&amp; vehicleDetails.getRegistrationNumber() != null</span>
+<span class="nc" id="L372">              &amp;&amp; regNo.trim().replace(&quot; &quot;, &quot;&quot;)</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">                  .equalsIgnoreCase(</span>
+<span class="nc" id="L374">                      vehicleDetails.getRegistrationNumber().trim()</span>
+<span class="nc" id="L375">                          .replace(&quot; &quot;, &quot;&quot;));</span>
+<span class="nc" id="L376">        }), () -&gt; ringException = new RingException(RingErrorCode.RA_3007,</span>
+            RingResponseCode.OK));
+<span class="nc" id="L378">    map.put(listOfVehicles.stream()</span>
+<span class="nc" id="L379">        .anyMatch(vehicleInfoMap -&gt; String</span>
+<span class="nc" id="L380">            .valueOf(vehicleInfoMap.get(&quot;vd_vehicle_name&quot;))</span>
+<span class="nc" id="L381">            .equalsIgnoreCase(vehicleDetails.getVehicleName())),</span>
+<span class="nc" id="L382">        () -&gt; ringException = new RingException(RingErrorCode.RA_3006,</span>
+            RingResponseCode.OK));
+
+<span class="nc" id="L385">    map.entrySet().stream().forEach(entryObj -&gt; {</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">      if (entryObj.getKey()) {</span>
+<span class="nc" id="L387">        map.get(entryObj.getKey()).run();</span>
+      }
+<span class="nc" id="L389">    });</span>
+
+<span class="nc bnc" id="L391" title="All 2 branches missed.">    if (!Objects.isNull(ringException)) {</span>
+<span class="nc" id="L392">      throw ringException;</span>
+    }
+
+<span class="nc" id="L395">  }</span>
+
+  @Override
+  public List&lt;Map&lt;String, Object&gt;&gt; getVehicleList(int userId) {
+<span class="nc" id="L399">    List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles = jdbctemplate</span>
+<span class="nc" id="L400">        .queryForList(GET_LIST_OF_VEHICLES, userId);</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">    for (Map&lt;String, Object&gt; vehicleMap : listOfVehicles) {</span>
+<span class="nc" id="L402">      int vehicleId = (Integer) vehicleMap.get(&quot;vehicleId&quot;);</span>
+<span class="nc" id="L403">      getAutoData(vehicleId, vehicleMap);</span>
+<span class="nc" id="L404">      vehicleMap.put(&quot;load&quot;,</span>
+<span class="nc" id="L405">          jdbctemplate.queryForList(GET_VEHICLE_LOAD_DATA, vehicleId));</span>
+<span class="nc" id="L406">    }</span>
+<span class="nc" id="L407">    return listOfVehicles;</span>
+  }
+
+  @Override
+  public Map&lt;String, Object&gt; getVehicle(int vehicleId) {
+<span class="nc" id="L412">    List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles = jdbctemplate</span>
+<span class="nc" id="L413">        .queryForList(GET_VEHICLE, vehicleId);</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">    for (Map&lt;String, Object&gt; vehicleMap : listOfVehicles) {</span>
+<span class="nc" id="L415">      getAutoData(vehicleId, vehicleMap);</span>
+<span class="nc" id="L416">      vehicleMap.put(&quot;load&quot;,</span>
+<span class="nc" id="L417">          jdbctemplate.queryForList(GET_VEHICLE_LOAD_DATA, vehicleId));</span>
+<span class="nc" id="L418">    }</span>
+<span class="nc" id="L419">    return listOfVehicles.get(AppConstant.ZERO);</span>
+  }
+
+  private void getAutoData(int vehicleId, Map&lt;String, Object&gt; vehicleMap) {
+<span class="nc" id="L423">    List&lt;Map&lt;String, Object&gt;&gt; autoDataList = jdbctemplate</span>
+<span class="nc" id="L424">        .queryForList(GET_VEHICLE_AUTODATA, vehicleId);</span>
+<span class="nc bnc" id="L425" title="All 2 branches missed.">    if (!autoDataList.isEmpty()) {</span>
+<span class="nc" id="L426">      vehicleMap.put(&quot;vehicleAutoData&quot;,</span>
+<span class="nc" id="L427">          jdbctemplate.queryForList(GET_VEHICLE_AUTODATA, vehicleId)</span>
+<span class="nc" id="L428">              .get(AppConstant.ZERO));</span>
+    } else {
+<span class="nc" id="L430">      vehicleMap.put(&quot;vehicleAutoData&quot;,</span>
+          null);
+    }
+<span class="nc" id="L433">  }</span>
+
+  @Override
+  public void updateDefaultstatus(int userId, int vehicleId) {
+<span class="nc" id="L437">    int defaultVehicleId = jdbctemplate.queryForObject(</span>
+        GET_DEFAULT_VEHICLE_ID_QUERY,
+<span class="nc" id="L439">        new Object[]{userId}, Integer.class);</span>
+<span class="nc" id="L440">    jdbctemplate.update(PUT_DEFAULT_STATUS_VEHICLE_QUERY, false,</span>
+<span class="nc" id="L441">        DaoUtil.getDate(),</span>
+<span class="nc" id="L442">        defaultVehicleId);</span>
+<span class="nc" id="L443">    jdbctemplate.update(PUT_DEFAULT_STATUS_VEHICLE_QUERY, true,</span>
+<span class="nc" id="L444">        DaoUtil.getDate(),</span>
+<span class="nc" id="L445">        vehicleId);</span>
+
+<span class="nc" id="L447">  }</span>
+
+  @Override
+  public void deleteVehicle(int vehicleId, int userId) throws RingException {
+<span class="nc" id="L451">    int defaultVehicleId = 0;</span>
+    try {
+<span class="nc" id="L453">      defaultVehicleId = jdbctemplate.queryForObject(</span>
+          GET_DEFAULT_VEHICLE_ID_QUERY,
+<span class="nc" id="L455">          new Object[]{userId}, Integer.class);</span>
+
+<span class="nc bnc" id="L457" title="All 2 branches missed.">      if (vehicleId != defaultVehicleId) {</span>
+<span class="nc" id="L458">        jdbctemplate.update(DELETE_VEHICLE, &quot;In-Active&quot;, false, userId,</span>
+<span class="nc" id="L459">            DaoUtil.getDate(),</span>
+<span class="nc" id="L460">            vehicleId);</span>
+      } else {
+<span class="nc" id="L462">        defaultVehicleId = getDefaultVehicleId(vehicleId, userId,</span>
+            defaultVehicleId);
+<span class="nc" id="L464">        jdbctemplate.update(DELETE_VEHICLE, &quot;In-Active&quot;, false, userId,</span>
+<span class="nc" id="L465">            DaoUtil.getDate(),</span>
+<span class="nc" id="L466">            vehicleId);</span>
+<span class="nc" id="L467">        jdbctemplate.update(PUT_DEFAULT_STATUS_VEHICLE_QUERY, true,</span>
+<span class="nc" id="L468">            DaoUtil.getDate(),</span>
+<span class="nc" id="L469">            defaultVehicleId);</span>
+      }
+<span class="nc" id="L471">    } catch (DataAccessException e) {</span>
+<span class="nc" id="L472">      throw new RingException(RingErrorCode.RA_3020,</span>
+          RingResponseCode.OK);
+<span class="nc" id="L474">    }</span>
+
+<span class="nc" id="L476">  }</span>
+
+  private int getDefaultVehicleId(int vehicleId, int userId,
+      int defaultVehicleId) {
+<span class="nc" id="L480">    List&lt;Map&lt;String, Object&gt;&gt; listOfVehicles = jdbctemplate</span>
+<span class="nc" id="L481">        .queryForList(GET_LIST_OF_VEHICLES, userId);</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">    for (Map&lt;String, Object&gt; vehicleMap : listOfVehicles) {</span>
+<span class="nc" id="L483">      int id = (int) vehicleMap.get(&quot;vehicleId&quot;);</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">      if (id != vehicleId) {</span>
+<span class="nc" id="L485">        defaultVehicleId = id;</span>
+<span class="nc" id="L486">        break;</span>
+      }
+<span class="nc" id="L488">    }</span>
+<span class="nc" id="L489">    return defaultVehicleId;</span>
+  }
+
+  @Override
+  @Transactional
+  public void editVehicle(int userId, int vehicleId, VehicleBo vehicleDetails)
+      throws RingException {
+<span class="nc bnc" id="L496" title="All 2 branches missed.">    if (vehicleDetails.getVehicleName() == null) {</span>
+<span class="nc" id="L497">      Map&lt;String, String&gt; vehicleMap = getVehicleName(userId);</span>
+<span class="nc" id="L498">      Map.Entry&lt;String, String&gt; entry = vehicleMap.entrySet().iterator()</span>
+<span class="nc" id="L499">          .next();</span>
+<span class="nc" id="L500">      vehicleDetails.setVehicleName(entry.getKey());</span>
+    }
+
+<span class="nc" id="L503">    validateFields(vehicleDetails,</span>
+<span class="nc" id="L504">        jdbctemplate.queryForList(GET_OTHER_VEHICLE_LIST, vehicleId, userId));</span>
+
+<span class="nc" id="L506">    editInfo(vehicleDetails, userId, vehicleId);</span>
+
+<span class="nc" id="L508">    editAutoData(vehicleId, vehicleDetails);</span>
+
+<span class="nc bnc" id="L510" title="All 4 branches missed.">    if (vehicleDetails.getLoad() != null &amp;&amp; !vehicleDetails.getLoad().isEmpty())</span>
+<span class="nc" id="L511">      vehicleDetails.getLoad().stream().forEach(</span>
+<span class="nc" id="L512">          pressureBo -&gt; editPressureSettings(userId, vehicleId, pressureBo));</span>
+
+<span class="nc" id="L514">  }</span>
+
+  private void editAutoData(int vehicleId, VehicleBo vehicleDetails) {
+<span class="nc bnc" id="L517" title="All 2 branches missed.">    if (!Objects.isNull(vehicleDetails.getVehicleAutoData())) {</span>
+<span class="nc" id="L518">      VehicleAutoDataBo autoDataBo = vehicleDetails.getVehicleAutoData();</span>
+<span class="nc" id="L519">      jdbctemplate.update(UPDATE_VEHICLE_AUTODATA,</span>
+<span class="nc" id="L520">          autoDataBo.getManufacturerId(), autoDataBo.getModelId(),</span>
+<span class="nc" id="L521">          autoDataBo.getmId(), autoDataBo.getTyrePressureId(), vehicleId);</span>
+    }
+<span class="nc" id="L523">  }</span>
+
+  @Override
+  public void editPressureSettings(int userId, int vehicleId,
+      PressureBo vehicleDetails) {
+<span class="nc" id="L528">    int pressureSettingId = jdbctemplate.queryForObject(GET_PRESSURE_ID,</span>
+<span class="nc" id="L529">        Integer.class, vehicleId, vehicleDetails.getLoadType().getLoadType());</span>
+<span class="nc bnc" id="L530" title="All 2 branches missed.">    if (vehicleDetails.getDefaultLoad() != null</span>
+<span class="nc bnc" id="L531" title="All 2 branches missed.">        &amp;&amp; vehicleDetails.getDefaultLoad()) {</span>
+<span class="nc" id="L532">      changePressureLoadDefaultStatus(userId, vehicleId, pressureSettingId);</span>
+    }
+<span class="nc" id="L534">    editInfo(vehicleDetails, userId, pressureSettingId);</span>
+<span class="nc" id="L535">  }</span>
+
+  private void changePressureLoadDefaultStatus(int userId, int vehicleId,
+      int pressureSettingId) {
+<span class="nc" id="L539">    List&lt;Integer&gt; listOfPressureIds = jdbctemplate.queryForList(</span>
+<span class="nc" id="L540">        GET_PRESSURE_IDS, Integer.class, vehicleId);</span>
+<span class="nc" id="L541">    Integer defaultLoadPressureId = jdbctemplate.queryForObject(</span>
+<span class="nc" id="L542">        GET_DEFAULT_LOAD_PRESSURE_ID, listOfPressureIds.toArray(),</span>
+        Integer.class);
+
+<span class="nc" id="L545">    jdbctemplate.update(UPDATE_DEFAULT_LOAD_STATUS, userId, false,</span>
+        defaultLoadPressureId);
+<span class="nc" id="L547">    jdbctemplate.update(UPDATE_DEFAULT_LOAD_STATUS, userId, true,</span>
+<span class="nc" id="L548">        pressureSettingId);</span>
+
+<span class="nc" id="L550">  }</span>
+
+  private void editInfo(Object obj, int userId, int objRelatedId) {
+<span class="nc" id="L553">    Map&lt;String, Object&gt; getQueryAndPlaceholderDataMap = queryBuilder</span>
+<span class="nc" id="L554">        .getQueryAndPlaceholderDataMap(obj, userId, objRelatedId);</span>
+<span class="nc bnc" id="L555" title="All 2 branches missed.">    if (!getQueryAndPlaceholderDataMap.isEmpty()) {</span>
+<span class="nc" id="L556">      jdbctemplate.update(</span>
+<span class="nc" id="L557">          String.class.cast(getQueryAndPlaceholderDataMap.get(&quot;query&quot;)),</span>
+          Object[].class
+<span class="nc" id="L559">              .cast(getQueryAndPlaceholderDataMap.get(&quot;placeholderData&quot;)));</span>
+    }
+<span class="nc" id="L561">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleInfoValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.util</a> &gt; <span class="el_source">VehicleInfoValidator.java</span></div><h1>VehicleInfoValidator.java</h1><pre class="source lang-java linenums">package com.ring.util;
+
+import java.util.regex.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ring.bo.PressureBo;
+import com.ring.bo.VehicleAutoDataBo;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+
+@Service
+<span class="nc" id="L15">public class VehicleInfoValidator extends BoValidator {</span>
+
+  @Autowired
+  AutoDataInfoValidator autoDataInfoValidator;
+  
+  @Autowired
+  PressureInfoValidator pressureInfoValidator;
+
+  public void validateVehicleName(String vehicleName)
+      throws RingException {
+<span class="nc" id="L25">    final Pattern vehicleNameRegex = Pattern.compile(&quot;^.{2,50}$&quot;,</span>
+        Pattern.CASE_INSENSITIVE);
+<span class="nc bnc" id="L27" title="All 2 branches missed.">    if (!vehicleNameRegex.matcher(vehicleName).matches()) {</span>
+<span class="nc" id="L28">      throw new RingException(RingErrorCode.RA_3005,</span>
+          RingResponseCode.OK);
+    }
+
+<span class="nc" id="L32">  }</span>
+
+  public void validateRegistrationNumber(String registrationNumber)
+      throws RingException {
+<span class="nc" id="L36">    final Pattern registrationNumberRegex = Pattern.compile(&quot;^[A-Z0-9 ]{7,8}$&quot;,</span>
+        Pattern.CASE_INSENSITIVE);
+<span class="nc bnc" id="L38" title="All 2 branches missed.">    if (!registrationNumberRegex.matcher(registrationNumber).matches()) {</span>
+<span class="nc" id="L39">      throw new RingException(RingErrorCode.RA_3002,</span>
+          RingResponseCode.OK);
+    }
+
+<span class="nc" id="L43">  }</span>
+
+  public void validateVin(String vin) throws RingException {
+<span class="nc" id="L46">    final Pattern vinRegex = Pattern.compile(&quot;^[A-Z0-9]{17,17}$&quot;,</span>
+        Pattern.CASE_INSENSITIVE);
+<span class="nc bnc" id="L48" title="All 2 branches missed.">    if (!vinRegex.matcher(vin).matches()) {</span>
+<span class="nc" id="L49">      throw new RingException(RingErrorCode.RA_3015,</span>
+          RingResponseCode.OK);
+    }
+
+<span class="nc" id="L53">  }</span>
+
+  public void validateCarMake(String carMake) throws RingException {
+<span class="nc" id="L56">    validateString(carMake,</span>
+        new RingException(RingErrorCode.RA_3003, RingResponseCode.OK));
+
+<span class="nc" id="L59">  }</span>
+
+  public void validateCarModel(String carModel) throws RingException {
+<span class="nc" id="L62">    validateString(carModel,</span>
+        new RingException(RingErrorCode.RA_3004, RingResponseCode.OK));
+<span class="nc" id="L64">  }</span>
+  
+  public void validateBodyStyle(String bodyStyle) throws RingException {
+<span class="nc" id="L67">    validateString(bodyStyle,</span>
+        new RingException(RingErrorCode.RA_3021, RingResponseCode.OK));
+<span class="nc" id="L69">  }</span>
+
+  public void validateYearOfManufacture(String year) throws RingException {
+<span class="nc" id="L72">    validateString(year,</span>
+        new RingException(RingErrorCode.RA_3013, RingResponseCode.OK));
+<span class="nc" id="L74">    final Pattern vinRegex = Pattern.compile(&quot;^[0-9-]{4,9}$&quot;,</span>
+        Pattern.CASE_INSENSITIVE);
+<span class="nc bnc" id="L76" title="All 2 branches missed.">    if (!vinRegex.matcher(year).matches()) {</span>
+<span class="nc" id="L77">      throw new RingException(RingErrorCode.RA_3019,</span>
+          RingResponseCode.OK);
+    }
+<span class="nc" id="L80">  }</span>
+
+  public void validateLoad(PressureBo pressureBo) throws RingException {
+<span class="nc" id="L83">    pressureInfoValidator.validateTyreSize(pressureBo.getTyreSize());</span>
+<span class="nc" id="L84">    pressureInfoValidator</span>
+<span class="nc" id="L85">    .validatePressureUnitType(pressureBo.getPressureUnitType());</span>
+<span class="nc" id="L86">    pressureInfoValidator.validateLoadType(pressureBo.getLoadType());</span>
+<span class="nc" id="L87">    pressureInfoValidator</span>
+<span class="nc" id="L88">        .validateFrontTyrePressure(pressureBo.getFrontTyrePressure());</span>
+<span class="nc" id="L89">    pressureInfoValidator</span>
+<span class="nc" id="L90">        .validateRearTyrePressure(pressureBo.getRearTyrePressure());</span>
+    
+  
+<span class="nc" id="L93">  }</span>
+  
+  public void validateAutoData(VehicleAutoDataBo vehicleAutoDataBo) throws RingException {
+<span class="nc" id="L96">    autoDataInfoValidator.validateMnufacturerId(vehicleAutoDataBo.getManufacturerId());</span>
+<span class="nc" id="L97">    autoDataInfoValidator.validateModelId(vehicleAutoDataBo.getModelId());</span>
+<span class="nc" id="L98">    autoDataInfoValidator.validateMId(vehicleAutoDataBo.getmId());</span>
+<span class="nc" id="L99">    autoDataInfoValidator.validateTyrePressureId(vehicleAutoDataBo.getTyrePressureId());</span>
+<span class="nc" id="L100">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

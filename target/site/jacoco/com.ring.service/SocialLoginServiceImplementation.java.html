@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SocialLoginServiceImplementation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.service</a> &gt; <span class="el_source">SocialLoginServiceImplementation.java</span></div><h1>SocialLoginServiceImplementation.java</h1><pre class="source lang-java linenums">package com.ring.service;
+
+import com.ring.bo.SocialLoginBo;
+import com.ring.config.UrlProvider;
+import com.ring.dao.UserDao;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
+
+@Service
+<span class="fc" id="L24">public class SocialLoginServiceImplementation implements SocialLoginService {</span>
+
+  @Autowired
+  UserDao dao;
+
+  @Autowired
+  FacebookServiceProvider fbServiceProvider;
+
+<span class="fc" id="L32">  private RestTemplate restTemplate = new RestTemplate();</span>
+
+  @Autowired
+  private UrlProvider urlProvider;
+
+  @Override
+  public ResponseEntity&lt;Map&gt; loginUsingFacebook(SocialLoginBo socialUserBo)
+      throws RingException {
+<span class="fc bfc" id="L40" title="All 2 branches covered.">    if (fbServiceProvider.validateAccessToken(socialUserBo.getAccessToken())) {</span>
+<span class="fc" id="L41">      dao.registerSocialUser(socialUserBo);</span>
+<span class="fc" id="L42">      return registerInAuthenticationServer(socialUserBo);</span>
+    }
+<span class="fc" id="L44">    throw new RingException(RingErrorCode.RA_1000, RingResponseCode.OK);</span>
+  }
+
+  private ResponseEntity&lt;Map&gt; registerInAuthenticationServer(
+      SocialLoginBo socialUserBo) {
+<span class="fc" id="L49">    HttpHeaders headers = new HttpHeaders();</span>
+<span class="fc" id="L50">    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);</span>
+<span class="fc" id="L51">    headers.add(&quot;Authorization&quot;, &quot;Basic &quot; + socialUserBo.getBasicAuthString());</span>
+
+<span class="fc" id="L53">    MultiValueMap&lt;String, String&gt; body = new LinkedMultiValueMap&lt;&gt;();</span>
+<span class="fc" id="L54">    body.add(&quot;username&quot;, socialUserBo.getLoginId());</span>
+<span class="fc" id="L55">    body.add(&quot;password&quot;, &quot;RingAuto_&quot; + socialUserBo.getLoginId());</span>
+<span class="fc" id="L56">    body.add(&quot;grant_type&quot;, &quot;password&quot;);</span>
+
+<span class="fc" id="L58">    HttpEntity&lt;MultiValueMap&lt;String, String&gt;&gt; entity = new HttpEntity&lt;&gt;(body,</span>
+        headers);
+<span class="fc" id="L60">    return restTemplate.exchange(urlProvider.getLoginUrl(), HttpMethod.POST,</span>
+        entity,
+        Map.class);
+
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TyrePressureDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.dao</a> &gt; <span class="el_source">TyrePressureDaoImpl.java</span></div><h1>TyrePressureDaoImpl.java</h1><pre class="source lang-java linenums">package com.ring.dao;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.ring.exceptions.RingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperationContext;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * class implementing TyrePressureDao.
+ * 
+ * @author ee209986
+ *
+ */
+
+@Repository
+<span class="fc" id="L32">public class TyrePressureDaoImpl implements TyrePressureDao {</span>
+
+  @Autowired
+  MongoTemplate mongoTemplate;
+
+  /**
+   * method to get lastInflated days of each tyre .
+   */
+  @Override
+  public List&lt;DBObject&gt; getLatestPressureData(int userId, int vehicleId)
+      throws RingException {
+<span class="fc" id="L43">    Aggregation aggregationOperations = newAggregation(</span>
+<span class="fc" id="L44">        match(where(&quot;userId&quot;).is(userId)</span>
+<span class="fc" id="L45">            .and(&quot;vehicleId&quot;).is(vehicleId)),</span>
+<span class="fc" id="L46">        group(&quot;tyreType&quot;).max(&quot;updatedTime&quot;).as(&quot;lastUpdatedTime&quot;));</span>
+<span class="fc" id="L47">    return mongoTemplate.aggregate(aggregationOperations, &quot;AirPressureData&quot;,</span>
+<span class="fc" id="L48">        DBObject.class).getMappedResults();</span>
+
+  }
+
+  @Override
+  public List&lt;DBObject&gt; getTyrePressureData(int userId, int vehicleId,
+      long fromEpochDay, long toEpochDay, String tyreType) {
+<span class="fc" id="L55">    Aggregation aggregationOperations = Aggregation.newAggregation(</span>
+<span class="fc" id="L56">        match(where(&quot;userId&quot;).is(userId).and(&quot;vehicleId&quot;)</span>
+<span class="fc" id="L57">            .is(vehicleId).and(&quot;tyreType&quot;).is(tyreType)),</span>
+<span class="fc" id="L58">        getGroupAggregationObject(),</span>
+<span class="fc" id="L59">        project().and(&quot;_id&quot;).as(&quot;date&quot;).andInclude(</span>
+            &quot;inflationEndPressure&quot;,
+<span class="fc" id="L61">            &quot;inflationStartPressure&quot;).andExclude(&quot;_id&quot;),</span>
+<span class="fc" id="L62">        match(where(&quot;date&quot;).gte(fromEpochDay).lte(toEpochDay)),</span>
+<span class="fc" id="L63">        sort(Direction.ASC, &quot;date&quot;));</span>
+<span class="fc" id="L64">    return mongoTemplate.aggregate(aggregationOperations, &quot;AirPressureData&quot;,</span>
+<span class="fc" id="L65">        DBObject.class).getMappedResults();</span>
+  }
+
+  private AggregationOperation getGroupAggregationObject() {
+<span class="fc" id="L69">    DBObject groupAggExpObj = new BasicDBObject();</span>
+
+<span class="fc" id="L71">    DBObject groupAggComponent = new BasicDBObject();</span>
+<span class="fc" id="L72">    groupAggComponent.put(&quot;_id&quot;, new BasicDBObject(&quot;$floor&quot;, new BasicDBObject(</span>
+        &quot;$divide&quot;,
+<span class="fc" id="L74">        new Object[]{new BasicDBObject(&quot;$toLong&quot;, &quot;$updatedTime&quot;), 86400})));</span>
+<span class="fc" id="L75">    groupAggComponent.put(&quot;inflationStartPressure&quot;,</span>
+        new BasicDBObject(&quot;$min&quot;, &quot;$currentPressureValue&quot;));
+<span class="fc" id="L77">    groupAggComponent.put(&quot;inflationEndPressure&quot;,</span>
+        new BasicDBObject(&quot;$max&quot;, &quot;$currentPressureValue&quot;));
+
+<span class="fc" id="L80">    groupAggExpObj.put(&quot;$group&quot;, groupAggComponent);</span>
+
+<span class="pc" id="L82">    return (AggregationOperationContext context) -&gt; groupAggExpObj;</span>
+
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

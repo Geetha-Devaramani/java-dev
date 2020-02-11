@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PressureUnitType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.constants</a> &gt; <span class="el_source">PressureUnitType.java</span></div><h1>PressureUnitType.java</h1><pre class="source lang-java linenums">package com.ring.constants;
+
+<span class="pc" id="L3">public enum PressureUnitType {</span>
+
+
+<span class="fc" id="L6">	PSI(&quot;psi&quot;), KPA(&quot;kPa&quot;),BAR(&quot;bar&quot;);</span>
+	private String presureType;
+
+
+<span class="fc" id="L10">	private PressureUnitType(String presureType) {</span>
+<span class="fc" id="L11">		this.presureType = presureType;</span>
+<span class="fc" id="L12">	}</span>
+
+	public String getPresureType() {
+<span class="fc" id="L15">		return presureType;</span>
+	}
+
+	public static PressureUnitType getPresureType(
+			String presureType) {
+
+<span class="nc bnc" id="L21" title="All 2 branches missed.">		for (PressureUnitType presureTypeRequest : PressureUnitType.values()) {</span>
+
+<span class="nc bnc" id="L23" title="All 2 branches missed.">			if (presureTypeRequest.getPresureType() == presureType) {</span>
+<span class="nc" id="L24">				return presureTypeRequest;</span>
+			}
+
+		}
+<span class="nc" id="L28">		return null;</span>
+
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

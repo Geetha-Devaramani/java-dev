@@ -1,0 +1,668 @@
+<html>
+<head>
+<title>TestNG:  Surefire test</title>
+<link href="../testng.css" rel="stylesheet" type="text/css" />
+<link href="../my-testng.css" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+.log { display: none;} 
+.stack-trace { display: none;} 
+</style>
+<script type="text/javascript">
+<!--
+function flip(e) {
+  current = e.style.display;
+  if (current == 'block') {
+    e.style.display = 'none';
+    return 0;
+  }
+  else {
+    e.style.display = 'block';
+    return 1;
+  }
+}
+
+function toggleBox(szDivId, elem, msg1, msg2)
+{
+  var res = -1;  if (document.getElementById) {
+    res = flip(document.getElementById(szDivId));
+  }
+  else if (document.all) {
+    // this is the way old msie versions work
+    res = flip(document.all[szDivId]);
+  }
+  if(elem) {
+    if(res == 0) elem.innerHTML = msg1; else elem.innerHTML = msg2;
+  }
+
+}
+
+function toggleAllBoxes() {
+  if (document.getElementsByTagName) {
+    d = document.getElementsByTagName('div');
+    for (i = 0; i < d.length; i++) {
+      if (d[i].className == 'log') {
+        flip(d[i]);
+      }
+    }
+  }
+}
+
+// -->
+</script>
+
+</head>
+<body>
+<h2 align='center'>Surefire test</h2><table border='1' align="center">
+<tr>
+<td>Tests passed/Failed/Skipped:</td><td>66/0/0</td>
+</tr><tr>
+<td>Started on:</td><td>Fri Jan 31 14:31:54 IST 2020</td>
+</tr>
+<tr><td>Total time:</td><td>7 seconds (7293 ms)</td>
+</tr><tr>
+<td>Included groups:</td><td></td>
+</tr><tr>
+<td>Excluded groups:</td><td></td>
+</tr>
+</table><p/>
+<small><i>(Hover the method name to see the test class name)</i></small><p/>
+<table width='100%' border='1' class='invocation-passed'>
+<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<tr><td><b>Test method</b></td>
+<td width="30%"><b>Exception</b></td>
+<td width="10%"><b>Time (seconds)</b></td>
+<td><b>Instance</b></td>
+</tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.addVehicleTest1()'><b>addVehicleTest1</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.dao.test.VehicleDaoImplTest.addVehicleTest1()'><b>addVehicleTest1</b><br>Test class: com.ring.dao.test.VehicleDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.VehicleDaoImplTest@6c43d4dd</td></tr>
+<tr>
+<td title='com.ring.service.test.VehicleServiceImplTest.addVehicleTest1()'><b>addVehicleTest1</b><br>Test class: com.ring.service.test.VehicleServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.VehicleServiceImplTest@772ccecf</td></tr>
+<tr>
+<td title='com.ring.dao.test.VehicleDaoImplTest.addVehicleTest2()'><b>addVehicleTest2</b><br>Test class: com.ring.dao.test.VehicleDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.VehicleDaoImplTest@6c43d4dd</td></tr>
+<tr>
+<td title='com.ring.service.test.VehicleServiceImplTest.addVehicleTest2()'><b>addVehicleTest2</b><br>Test class: com.ring.service.test.VehicleServiceImplTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+	at com.ring.service.VehicleServiceImpl.addVehicle(VehicleServiceImpl.java:28)
+	at com.ring.service.test.VehicleServiceImplTest.addVehicleTest2(VehicleServiceImplTest.java:83)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1454788864", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1454788864'><pre>com.ring.exceptions.RingException
+	at com.ring.service.VehicleServiceImpl.addVehicle(VehicleServiceImpl.java:28)
+	at com.ring.service.test.VehicleServiceImplTest.addVehicleTest2(VehicleServiceImplTest.java:83)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.VehicleServiceImplTest@772ccecf</td></tr>
+<tr>
+<td title='com.ring.service.test.VehicleServiceImplTest.deleteVehicle()'><b>deleteVehicle</b><br>Test class: com.ring.service.test.VehicleServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.VehicleServiceImplTest@772ccecf</td></tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.deleteVehicleTest1()'><b>deleteVehicleTest1</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.editPressureSettingsTest()'><b>editPressureSettingsTest</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.editVehicleTest()'><b>editVehicleTest</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.dao.test.VehicleDaoImplTest.editVehicleTest()'><b>editVehicleTest</b><br>Test class: com.ring.dao.test.VehicleDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.VehicleDaoImplTest@6c43d4dd</td></tr>
+<tr>
+<td title='com.ring.dao.test.RecoverAccountDaoTest.getDataBasedOnTokenTest1()'><b>getDataBasedOnTokenTest1</b><br>Test class: com.ring.dao.test.RecoverAccountDaoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.RecoverAccountDaoTest@7d2aa0c</td></tr>
+<tr>
+<td title='com.ring.dao.test.TyrePressureDaoImplTest.getLatestPressureDataTest1()'><b>getLatestPressureDataTest1</b><br>Test class: com.ring.dao.test.TyrePressureDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.TyrePressureDaoImplTest@76f18f68</td></tr>
+<tr>
+<td title='com.ring.service.test.TyrePressureServiceImplTest.getLatestPressureDataTest1()'><b>getLatestPressureDataTest1</b><br>Test class: com.ring.service.test.TyrePressureServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.TyrePressureServiceImplTest@3b89f41a</td></tr>
+<tr>
+<td title='com.ring.service.test.NextScreenInfoTest.getNextScreeninfoTest2()'><b>getNextScreeninfoTest2</b><br>Test class: com.ring.service.test.NextScreenInfoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.NextScreenInfoTest@319267ad</td></tr>
+<tr>
+<td title='com.ring.service.test.NextScreenInfoTest.getNextScreeninfoTest3()'><b>getNextScreeninfoTest3</b><br>Test class: com.ring.service.test.NextScreenInfoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.NextScreenInfoTest@319267ad</td></tr>
+<tr>
+<td title='com.ring.service.test.NextScreenInfoTest.getNextScreeninfoTest4()'><b>getNextScreeninfoTest4</b><br>Test class: com.ring.service.test.NextScreenInfoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.NextScreenInfoTest@319267ad</td></tr>
+<tr>
+<td title='com.ring.service.test.NextScreenInfoTest.getNextScreeninfoTest5()'><b>getNextScreeninfoTest5</b><br>Test class: com.ring.service.test.NextScreenInfoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.NextScreenInfoTest@319267ad</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.getQuatersTest()'><b>getQuatersTest</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.dao.test.TyrePressureDaoImplTest.getTyrePressureDataTest1()'><b>getTyrePressureDataTest1</b><br>Test class: com.ring.dao.test.TyrePressureDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.TyrePressureDaoImplTest@76f18f68</td></tr>
+<tr>
+<td title='com.ring.service.test.TyrePressureServiceImplTest.getTyrePressureDataTest1()'><b>getTyrePressureDataTest1</b><br>Test class: com.ring.service.test.TyrePressureServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.TyrePressureServiceImplTest@3b89f41a</td></tr>
+<tr>
+<td title='com.ring.dao.test.RecoverAccountDaoTest.getUserInfoFromDbTest1()'><b>getUserInfoFromDbTest1</b><br>Test class: com.ring.dao.test.RecoverAccountDaoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.RecoverAccountDaoTest@7d2aa0c</td></tr>
+<tr>
+<td title='com.ring.dao.test.UserDaoImplTest.getUserInfoTest()'><b>getUserInfoTest</b><br>Test class: com.ring.dao.test.UserDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.UserDaoImplTest@7e5383d1</td></tr>
+<tr>
+<td title='com.ring.controller.test.UserControllerTest.getUserInfoTest1()'><b>getUserInfoTest1</b><br>Test class: com.ring.controller.test.UserControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.UserControllerTest@7bb5c602</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.getUserInfoTest1()'><b>getUserInfoTest1</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.getUserInfoTest2()'><b>getUserInfoTest2</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+	at com.ring.service.UserServiceImpl.getUserInfo(UserServiceImpl.java:87)
+	at com.ring.service.test.UserServiceImplTest.getUserInfoTest2(UserServiceImplTest.java:70)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace1026371184", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1026371184'><pre>com.ring.exceptions.RingException
+	at com.ring.service.UserServiceImpl.getUserInfo(UserServiceImpl.java:87)
+	at com.ring.service.test.UserServiceImplTest.getUserInfoTest2(UserServiceImplTest.java:70)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.dao.test.LoginDaoImplTest.getUserTest1()'><b>getUserTest1</b><br>Test class: com.ring.dao.test.LoginDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.LoginDaoImplTest@4aa8504f</td></tr>
+<tr>
+<td title='com.ring.service.test.VehicleServiceImplTest.getVehicle()'><b>getVehicle</b><br>Test class: com.ring.service.test.VehicleServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.VehicleServiceImplTest@772ccecf</td></tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.getVehicleListTest1()'><b>getVehicleListTest1</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.dao.test.VehicleDaoImplTest.getVehicleListTest1()'><b>getVehicleListTest1</b><br>Test class: com.ring.dao.test.VehicleDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.VehicleDaoImplTest@6c43d4dd</td></tr>
+<tr>
+<td title='com.ring.service.test.VehicleServiceImplTest.getVehicleListTest1()'><b>getVehicleListTest1</b><br>Test class: com.ring.service.test.VehicleServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.VehicleServiceImplTest@772ccecf</td></tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.getVehicleTest1()'><b>getVehicleTest1</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.dao.test.VehicleDaoImplTest.getVehicleTest1()'><b>getVehicleTest1</b><br>Test class: com.ring.dao.test.VehicleDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.VehicleDaoImplTest@6c43d4dd</td></tr>
+<tr>
+<td title='com.ring.service.test.LoginServiceImplTest.loadUserByUsernameTest1()'><b>loadUserByUsernameTest1</b><br>Test class: com.ring.service.test.LoginServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.LoginServiceImplTest@53bd2b00</td></tr>
+<tr>
+<td title='com.ring.service.test.LoginServiceImplTest.loadUserByUsernameTest2()'><b>loadUserByUsernameTest2</b><br>Test class: com.ring.service.test.LoginServiceImplTest</td>
+<td><div><pre>org.springframework.security.core.userdetails.UsernameNotFoundException: User not found
+	at com.ring.service.LoginServiceImpl.loadUserByUsername(LoginServiceImpl.java:32)
+	at com.ring.service.test.LoginServiceImplTest.loadUserByUsernameTest2(LoginServiceImplTest.java:49)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace71242230", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace71242230'><pre>org.springframework.security.core.userdetails.UsernameNotFoundException: User not found
+	at com.ring.service.LoginServiceImpl.loadUserByUsername(LoginServiceImpl.java:32)
+	at com.ring.service.test.LoginServiceImplTest.loadUserByUsernameTest2(LoginServiceImplTest.java:49)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.LoginServiceImplTest@53bd2b00</td></tr>
+<tr>
+<td title='com.ring.service.test.SocialLoginServiceImplementationTest.loginUsingFacebookTest1()'><b>loginUsingFacebookTest1</b><br>Test class: com.ring.service.test.SocialLoginServiceImplementationTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.SocialLoginServiceImplementationTest@1d62a0b</td></tr>
+<tr>
+<td title='com.ring.service.test.SocialLoginServiceImplementationTest.loginUsingFacebookTest2()'><b>loginUsingFacebookTest2</b><br>Test class: com.ring.service.test.SocialLoginServiceImplementationTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+	at com.ring.service.SocialLoginServiceImplementation.loginUsingFacebook(SocialLoginServiceImplementation.java:44)
+	at com.ring.service.test.SocialLoginServiceImplementationTest.loginUsingFacebookTest2(SocialLoginServiceImplementationTest.java:85)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace941694309", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace941694309'><pre>com.ring.exceptions.RingException
+	at com.ring.service.SocialLoginServiceImplementation.loginUsingFacebook(SocialLoginServiceImplementation.java:44)
+	at com.ring.service.test.SocialLoginServiceImplementationTest.loginUsingFacebookTest2(SocialLoginServiceImplementationTest.java:85)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.SocialLoginServiceImplementationTest@1d62a0b</td></tr>
+<tr>
+<td title='com.ring.controller.test.SocialLoginControllerTest.loginUsingSocialNetworkTest1()'><b>loginUsingSocialNetworkTest1</b><br>Test class: com.ring.controller.test.SocialLoginControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.SocialLoginControllerTest@67954442</td></tr>
+<tr>
+<td title='com.ring.controller.test.SocialLoginControllerTest.loginUsingSocialNetworkTest2()'><b>loginUsingSocialNetworkTest2</b><br>Test class: com.ring.controller.test.SocialLoginControllerTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+</pre></div><a href='#' onClick='toggleBox("stack-trace1432377746", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1432377746'><pre>com.ring.exceptions.RingException
+</pre></div></td>
+<td>0</td>
+<td>com.ring.controller.test.SocialLoginControllerTest@67954442</td></tr>
+<tr>
+<td title='com.ring.controller.test.AppCoreControllerTest.logoutTest()'><b>logoutTest</b><br>Test class: com.ring.controller.test.AppCoreControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.AppCoreControllerTest@548bdfda</td></tr>
+<tr>
+<td title='com.ring.dao.test.RecoverAccountDaoTest.persistTokenInDbTest1()'><b>persistTokenInDbTest1</b><br>Test class: com.ring.dao.test.RecoverAccountDaoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.RecoverAccountDaoTest@7d2aa0c</td></tr>
+<tr>
+<td title='com.ring.controller.test.RecoverAccountControllerTest.recoverAccountHandlerTest1()'><b>recoverAccountHandlerTest1</b><br>Test class: com.ring.controller.test.RecoverAccountControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.RecoverAccountControllerTest@4a3e3ce3</td></tr>
+<tr>
+<td title='com.ring.controller.test.AppCoreControllerTest.registerClientTest1()'><b>registerClientTest1</b><br>Test class: com.ring.controller.test.AppCoreControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.AppCoreControllerTest@548bdfda</td></tr>
+<tr>
+<td title='com.ring.dao.test.UserDaoImplTest.registerClientTest1()'><b>registerClientTest1</b><br>Test class: com.ring.dao.test.UserDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.UserDaoImplTest@7e5383d1</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.registerClientTest1()'><b>registerClientTest1</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.dao.test.SocialLoginDaoTest.registerSocialUserTest1()'><b>registerSocialUserTest1</b><br>Test class: com.ring.dao.test.SocialLoginDaoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.SocialLoginDaoTest@5282f922</td></tr>
+<tr>
+<td title='com.ring.dao.test.SocialLoginDaoTest.registerSocialUserTest2()'><b>registerSocialUserTest2</b><br>Test class: com.ring.dao.test.SocialLoginDaoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.SocialLoginDaoTest@5282f922</td></tr>
+<tr>
+<td title='com.ring.controller.test.UserControllerTest.registerUserTest1()'><b>registerUserTest1</b><br>Test class: com.ring.controller.test.UserControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.UserControllerTest@7bb5c602</td></tr>
+<tr>
+<td title='com.ring.dao.test.UserDaoImplTest.registerUserTest1()'><b>registerUserTest1</b><br>Test class: com.ring.dao.test.UserDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.UserDaoImplTest@7e5383d1</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.registerUserTest1()'><b>registerUserTest1</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.dao.test.UserDaoImplTest.registerUserTest2()'><b>registerUserTest2</b><br>Test class: com.ring.dao.test.UserDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.UserDaoImplTest@7e5383d1</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.registerUserTest2()'><b>registerUserTest2</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+	at com.ring.service.UserServiceImpl.registerUser(UserServiceImpl.java:66)
+	at com.ring.service.test.UserServiceImplTest.registerUserTest2(UserServiceImplTest.java:136)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace262732974", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace262732974'><pre>com.ring.exceptions.RingException
+	at com.ring.service.UserServiceImpl.registerUser(UserServiceImpl.java:66)
+	at com.ring.service.test.UserServiceImplTest.registerUserTest2(UserServiceImplTest.java:136)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.controller.test.RecoverAccountControllerTest.resetCredentialsHandlerTest()'><b>resetCredentialsHandlerTest</b><br>Test class: com.ring.controller.test.RecoverAccountControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.RecoverAccountControllerTest@4a3e3ce3</td></tr>
+<tr>
+<td title='com.ring.service.test.RecoverAccountServiceImplTest.resetCredentialsTest1()'><b>resetCredentialsTest1</b><br>Test class: com.ring.service.test.RecoverAccountServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.RecoverAccountServiceImplTest@4305b87e</td></tr>
+<tr>
+<td title='com.ring.service.test.RecoverAccountServiceImplTest.resetCredentialsTest2()'><b>resetCredentialsTest2</b><br>Test class: com.ring.service.test.RecoverAccountServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.RecoverAccountServiceImplTest@4305b87e</td></tr>
+<tr>
+<td title='com.ring.service.test.RecoverAccountServiceImplTest.resetCredentialsTest3()'><b>resetCredentialsTest3</b><br>Test class: com.ring.service.test.RecoverAccountServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.RecoverAccountServiceImplTest@4305b87e</td></tr>
+<tr>
+<td title='com.ring.dao.test.RecoverAccountDaoTest.resetPasswordTest1()'><b>resetPasswordTest1</b><br>Test class: com.ring.dao.test.RecoverAccountDaoTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.RecoverAccountDaoTest@7d2aa0c</td></tr>
+<tr>
+<td title='com.ring.controller.test.AppCoreControllerTest.screenDetailsTest1()'><b>screenDetailsTest1</b><br>Test class: com.ring.controller.test.AppCoreControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.AppCoreControllerTest@548bdfda</td></tr>
+<tr>
+<td title='com.ring.service.test.RecoverAccountServiceImplTest.sendMailTest1()'><b>sendMailTest1</b><br>Test class: com.ring.service.test.RecoverAccountServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.RecoverAccountServiceImplTest@4305b87e</td></tr>
+<tr>
+<td title='com.ring.service.test.RecoverAccountServiceImplTest.sendMailTest2()'><b>sendMailTest2</b><br>Test class: com.ring.service.test.RecoverAccountServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.RecoverAccountServiceImplTest@4305b87e</td></tr>
+<tr>
+<td title='com.ring.controller.test.VehicleControllerTest.updateDefaultstatusTest()'><b>updateDefaultstatusTest</b><br>Test class: com.ring.controller.test.VehicleControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.VehicleControllerTest@714ab3a1</td></tr>
+<tr>
+<td title='com.ring.dao.test.UserDaoImplTest.updateInfoTest1()'><b>updateInfoTest1</b><br>Test class: com.ring.dao.test.UserDaoImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.dao.test.UserDaoImplTest@7e5383d1</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.updateInfoTest1()'><b>updateInfoTest1</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.service.test.UserServiceImplTest.updateInfoTest2()'><b>updateInfoTest2</b><br>Test class: com.ring.service.test.UserServiceImplTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+	at com.ring.service.UserServiceImpl.updateInfo(UserServiceImpl.java:168)
+	at com.ring.service.test.UserServiceImplTest.updateInfoTest2(UserServiceImplTest.java:109)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace230081894", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace230081894'><pre>com.ring.exceptions.RingException
+	at com.ring.service.UserServiceImpl.updateInfo(UserServiceImpl.java:168)
+	at com.ring.service.test.UserServiceImplTest.updateInfoTest2(UserServiceImplTest.java:109)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.UserServiceImplTest@198453c9</td></tr>
+<tr>
+<td title='com.ring.controller.test.UserControllerTest.updateUserInfoTest1()'><b>updateUserInfoTest1</b><br>Test class: com.ring.controller.test.UserControllerTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.controller.test.UserControllerTest@7bb5c602</td></tr>
+<tr>
+<td title='com.ring.service.test.FacebookServiceProviderTest.validateAccessTokenTest1()'><b>validateAccessTokenTest1</b><br>Test class: com.ring.service.test.FacebookServiceProviderTest</td>
+<td></td>
+<td>0</td>
+<td>com.ring.service.test.FacebookServiceProviderTest@29cd7b9e</td></tr>
+<tr>
+<td title='com.ring.service.test.FacebookServiceProviderTest.validateAccessTokenTest2()'><b>validateAccessTokenTest2</b><br>Test class: com.ring.service.test.FacebookServiceProviderTest</td>
+<td><div><pre>com.ring.exceptions.RingException
+	at com.ring.service.FacebookServiceProvider.getDebugTokenUrl(FacebookServiceProvider.java:49)
+	at com.ring.service.FacebookServiceProvider.getAccesstokenInformation(FacebookServiceProvider.java:34)
+	at com.ring.service.FacebookServiceProvider.validateAccessToken(FacebookServiceProvider.java:25)
+	at com.ring.service.test.FacebookServiceProviderTest.validateAccessTokenTest2(FacebookServiceProviderTest.java:71)
+... Removed 29 stack frames</pre></div><a href='#' onClick='toggleBox("stack-trace468173893", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace468173893'><pre>com.ring.exceptions.RingException
+	at com.ring.service.FacebookServiceProvider.getDebugTokenUrl(FacebookServiceProvider.java:49)
+	at com.ring.service.FacebookServiceProvider.getAccesstokenInformation(FacebookServiceProvider.java:34)
+	at com.ring.service.FacebookServiceProvider.validateAccessToken(FacebookServiceProvider.java:25)
+	at com.ring.service.test.FacebookServiceProviderTest.validateAccessTokenTest2(FacebookServiceProviderTest.java:71)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:124)
+	at org.testng.internal.Invoker.invokeMethod(Invoker.java:580)
+	at org.testng.internal.Invoker.invokeTestMethod(Invoker.java:716)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:988)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:125)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:648)
+	at org.testng.TestRunner.run(TestRunner.java:505)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:455)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:450)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:415)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:364)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:84)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1208)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1137)
+	at org.testng.TestNG.runSuites(TestNG.java:1049)
+	at org.testng.TestNG.run(TestNG.java:1017)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:115)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:205)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:108)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:111)
+	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+</pre></div></td>
+<td>0</td>
+<td>com.ring.service.test.FacebookServiceProviderTest@29cd7b9e</td></tr>
+</table><p>
+</body>
+</html>

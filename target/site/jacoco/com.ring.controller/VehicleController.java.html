@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.controller</a> &gt; <span class="el_source">VehicleController.java</span></div><h1>VehicleController.java</h1><pre class="source lang-java linenums">package com.ring.controller;
+
+import com.ring.bo.PressureBo;
+import com.ring.bo.ResponseBo;
+import com.ring.bo.ResponseDataBo;
+import com.ring.bo.VehicleBo;
+import com.ring.constants.RingMessageCode;
+import com.ring.constants.UrlConstantsBo;
+import com.ring.exceptions.RingException;
+import com.ring.service.VehicleService;
+import com.ring.util.PressureBoValidator;
+import com.ring.util.ResponseUtil;
+import com.ring.util.VehicleBoValidator;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping(UrlConstantsBo.USERS + UrlConstantsBo.USER_ID
+    + UrlConstantsBo.VEHICLES)
+<span class="fc" id="L28">public class VehicleController {</span>
+
+  @Autowired
+  VehicleService service;
+  
+  @Autowired
+  VehicleBoValidator vehicleBoValidator;
+  
+  @Autowired
+  PressureBoValidator pressureBoValidator;
+
+<span class="fc" id="L39">  ResponseDataBo responseDataBo = new ResponseDataBo();</span>
+
+<span class="fc" id="L41">  ResponseBo responseBo = new ResponseBo();</span>
+
+  @RequestMapping(
+      method = RequestMethod.POST)
+  public ResponseEntity&lt;ResponseDataBo&gt; addVehicle(@PathVariable(&quot;userId&quot;) int userId,
+      final @RequestBody VehicleBo vehicleDetails)
+          throws Exception {
+<span class="fc" id="L48">    vehicleBoValidator.validateForVehicleAddition(vehicleDetails);</span>
+<span class="fc" id="L49">    return new ResponseEntity&lt;&gt;( ResponseUtil.genericResponseData</span>
+<span class="fc" id="L50">        (RingMessageCode.RM_3000.name(),service.addVehicle(userId, vehicleDetails)), HttpStatus.OK);</span>
+
+  }
+
+  @RequestMapping(
+      value = UrlConstantsBo.VEHICLE_ID,
+      method = RequestMethod.PUT)
+  public ResponseEntity&lt;ResponseBo&gt; editVehicle(
+      @PathVariable(&quot;userId&quot;) int userId,
+      @PathVariable(&quot;vehicleId&quot;) int vehicleId,
+      final @RequestBody VehicleBo vehicleDetails)
+          throws Exception {
+<span class="fc" id="L62">    vehicleBoValidator.validateForVehicleUpdate(vehicleDetails);</span>
+<span class="fc" id="L63">    service.editVehicle(userId, vehicleId, vehicleDetails);</span>
+<span class="fc" id="L64">    return new ResponseEntity&lt;&gt;(ResponseUtil.genericResponse</span>
+<span class="fc" id="L65">        (RingMessageCode.RM_3001.name()), HttpStatus.OK);</span>
+
+  }
+
+
+
+  @RequestMapping(
+      value = UrlConstantsBo.VEHICLE_ID
+      + UrlConstantsBo.PRESSURE_SETTINGS,
+      method = RequestMethod.PUT)
+  public ResponseEntity&lt;ResponseBo&gt; editPressureSettings(
+      @PathVariable(&quot;userId&quot;) int userId,
+      @PathVariable(&quot;vehicleId&quot;) int vehicleId,
+      final @RequestBody PressureBo vehiclePressureDetails)
+          throws RingException {
+<span class="fc" id="L80">    pressureBoValidator.validateForPressureSettingsUpdate(vehiclePressureDetails);</span>
+<span class="fc" id="L81">    service.editPressureSettings(userId, vehicleId, vehiclePressureDetails);</span>
+<span class="fc" id="L82">    return new ResponseEntity&lt;&gt;(ResponseUtil.genericResponse</span>
+<span class="fc" id="L83">        (RingMessageCode.RM_3002.name()), HttpStatus.OK);</span>
+  }
+
+
+  @RequestMapping(
+      value = UrlConstantsBo.VEHICLE_ID+ UrlConstantsBo.DEFAULT_VEHICLE,
+      method = RequestMethod.PUT)
+  public ResponseEntity&lt;ResponseBo&gt; updateDefaultstatus(
+      @PathVariable(&quot;userId&quot;) int userId,
+      @PathVariable(&quot;vehicleId&quot;) int vehicleId)
+          throws RingException {
+<span class="fc" id="L94">    service.updateDefaultstatus(userId,vehicleId);</span>
+<span class="fc" id="L95">    return new ResponseEntity&lt;&gt;(ResponseUtil.genericResponse</span>
+<span class="fc" id="L96">        (RingMessageCode.RM_3003.name()), HttpStatus.OK);</span>
+  }
+
+  @RequestMapping(
+      method = RequestMethod.GET)
+  public ResponseEntity&lt;ResponseDataBo&gt; getVehicleList(
+      @PathVariable(&quot;userId&quot;) int userId)
+          throws RingException {
+<span class="fc" id="L104">    return new ResponseEntity&lt;&gt;( ResponseUtil.genericResponseData</span>
+<span class="fc" id="L105">        (RingMessageCode.RM_3004.name(),service.getVehicleList(userId)), HttpStatus.OK);</span>
+
+  }
+
+  @RequestMapping(
+      value = UrlConstantsBo.VEHICLE_ID,
+      method = RequestMethod.GET)
+  public ResponseEntity&lt;ResponseDataBo&gt; getVehicle(@PathVariable(&quot;vehicleId&quot;) int vehicleId)
+      throws RingException {
+<span class="fc" id="L114">    return new ResponseEntity&lt;&gt;( ResponseUtil.genericResponseData</span>
+<span class="fc" id="L115">        (RingMessageCode.RM_3005.name(),service.getVehicle(vehicleId)), HttpStatus.OK);</span>
+
+  }
+
+
+  @RequestMapping(
+      value = UrlConstantsBo.VEHICLE_ID,
+      method = RequestMethod.DELETE)
+  public ResponseEntity&lt;ResponseBo&gt; deleteVehicle(@PathVariable(&quot;vehicleId&quot;) 
+  int vehicleId,@PathVariable(&quot;userId&quot;) int userId)
+      throws RingException {
+<span class="fc" id="L126">    service.deleteVehicle(vehicleId,userId);</span>
+<span class="fc" id="L127">    return new ResponseEntity&lt;&gt;(ResponseUtil.genericResponse</span>
+<span class="fc" id="L128">        (RingMessageCode.RM_3006.name()), HttpStatus.OK);</span>
+
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

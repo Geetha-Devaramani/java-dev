@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TyrePressureServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.service</a> &gt; <span class="el_source">TyrePressureServiceImpl.java</span></div><h1>TyrePressureServiceImpl.java</h1><pre class="source lang-java linenums">package com.ring.service;
+
+import com.mongodb.DBObject;
+import com.ring.dao.TyrePressureDao;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.TextStyle;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+/**
+ * Class implementing TyrePressureService.
+ * 
+ * @author ee209986
+ *
+ */
+
+@Service(&quot;pressureService&quot;)
+<span class="fc" id="L33">public class TyrePressureServiceImpl implements TyrePressureService {</span>
+  /**
+   * Dao object.
+   */
+  @Autowired
+  TyrePressureDao dao;
+
+  /**
+   * method to get lastInflated days of each tyre .
+   */
+  @Override
+  public Map&lt;String, Object&gt; getLatestPressureData(int userId, int vehicleId)
+      throws RingException {
+<span class="fc" id="L46">    final Map&lt;String, Object&gt; dataResponseMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L47">    dataResponseMap.put(&quot;FR&quot;, -1);</span>
+<span class="fc" id="L48">    dataResponseMap.put(&quot;FL&quot;, -1);</span>
+<span class="fc" id="L49">    dataResponseMap.put(&quot;RR&quot;, -1);</span>
+<span class="fc" id="L50">    dataResponseMap.put(&quot;RL&quot;, -1);</span>
+<span class="fc" id="L51">    List&lt;DBObject&gt; dataFromDb = dao.getLatestPressureData(userId, vehicleId);</span>
+<span class="fc" id="L52">    dataResponseMap.keySet()</span>
+<span class="fc" id="L53">        .forEach(key -&gt; dataFromDb.stream().filter(dbObject -&gt; String</span>
+<span class="fc" id="L54">            .valueOf(dbObject.get(&quot;_id&quot;)).equalsIgnoreCase(key)).findAny()</span>
+<span class="fc" id="L55">            .ifPresent(dbObject -&gt; dataResponseMap.put(key,</span>
+<span class="fc" id="L56">                computeLastInflatedInDays(</span>
+<span class="fc" id="L57">                    String.valueOf(dbObject.get(&quot;lastUpdatedTime&quot;))))));</span>
+
+<span class="fc" id="L59">    return dataResponseMap;</span>
+  }
+
+  private static long computeLastInflatedInDays(String lastUpdated) {
+<span class="fc" id="L63">    return Instant.ofEpochSecond(Long.parseLong(lastUpdated))</span>
+<span class="fc" id="L64">        .atZone(ZoneId.systemDefault()).toLocalDate()</span>
+<span class="fc" id="L65">        .until(LocalDate.now(), ChronoUnit.DAYS);</span>
+  }
+
+  @Override
+  public List&lt;DBObject&gt; getTyrePressureData(int userId, int vehicleId,
+      String fromMonthYear,
+      String toMonthYear, String wheelType) throws RingException {
+<span class="fc" id="L72">    List&lt;DBObject&gt; dataFromDb = dao.getTyrePressureData(userId, vehicleId,</span>
+<span class="fc" id="L73">        getLocalDateFromMonthYearString(fromMonthYear)</span>
+<span class="fc" id="L74">            .toEpochDay(),</span>
+<span class="fc" id="L75">        getLastDateOfMonth(getLocalDateFromMonthYearString(toMonthYear))</span>
+<span class="fc" id="L76">            .toEpochDay(),</span>
+        wheelType);
+
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">    if (dataFromDb.isEmpty()) {</span>
+<span class="nc" id="L80">      throw new RingException(RingErrorCode.RA_3010, RingResponseCode.OK);</span>
+    } else {
+<span class="fc" id="L82">      dataFromDb.forEach(dbObject -&gt; dbObject.put(&quot;date&quot;,</span>
+<span class="fc" id="L83">          getDateStringFromEpochDay(Double</span>
+<span class="fc" id="L84">              .valueOf(String.valueOf(dbObject.get(&quot;date&quot;))).longValue())));</span>
+    }
+<span class="fc" id="L86">    return dataFromDb;</span>
+  }
+
+  private LocalDate getLocalDateFromMonthYearString(String monthYear) {
+<span class="fc" id="L90">    DateTimeFormatter formatter = new DateTimeFormatterBuilder()</span>
+<span class="fc" id="L91">        .parseLenient().parseCaseInsensitive()</span>
+<span class="fc" id="L92">        .append(DateTimeFormatter.ofPattern(&quot;ddMMMyyyy&quot;))</span>
+<span class="fc" id="L93">        .toFormatter().withZone(ZoneId.systemDefault());</span>
+<span class="fc" id="L94">    return LocalDate.parse(&quot;1&quot; + monthYear.trim().replace(&quot; &quot;, &quot;&quot;),</span>
+        formatter);
+  }
+
+  private String getDateStringFromEpochDay(long epochDay) {
+<span class="fc" id="L99">    LocalDate localdate = LocalDate</span>
+<span class="fc" id="L100">        .ofEpochDay(epochDay);</span>
+<span class="fc" id="L101">    return localdate.getDayOfMonth() + &quot; &quot; + Month.of(localdate.getMonthValue())</span>
+<span class="fc" id="L102">        .getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase() + &quot; &quot;</span>
+<span class="fc" id="L103">        + localdate.getYear();</span>
+  }
+
+  private LocalDate getLastDateOfMonth(LocalDate date) {
+<span class="fc" id="L107">    return date.withDayOfMonth(</span>
+<span class="fc" id="L108">        date.getMonth().length(date.isLeapYear()));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

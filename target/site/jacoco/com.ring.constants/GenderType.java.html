@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GenderType.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.constants</a> &gt; <span class="el_source">GenderType.java</span></div><h1>GenderType.java</h1><pre class="source lang-java linenums">package com.ring.constants;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+<span class="pc" id="L5">public enum GenderType {</span>
+
+<span class="fc" id="L7">  MALE(&quot;Male&quot;), FEMALE(&quot;Female&quot;), NON_BINARY(&quot;Non-Binary&quot;), PREFER_NOT_TO_SAY(</span>
+      &quot;Prefer Not To Say&quot;);
+
+  private String genderType;
+
+<span class="fc" id="L12">  private GenderType(String genderType) {</span>
+<span class="fc" id="L13">    this.genderType = genderType;</span>
+<span class="fc" id="L14">  }</span>
+
+  public void setGenderType(String genderType) {
+<span class="nc" id="L17">    this.genderType = genderType;</span>
+<span class="nc" id="L18">  }</span>
+
+  public String getGenderType() {
+<span class="fc" id="L21">    return genderType;</span>
+  }
+
+ /* public static GenderType setGenderTypeUsingCustomInput(String genderType) {
+
+    for (GenderType genderTypeRequest : GenderType.values()) {
+
+      if (genderTypeRequest.getGenderType().equalsIgnoreCase(genderType)) {
+        return genderTypeRequest;
+      }
+
+    }
+    return null;
+
+  }*/
+  
+  @JsonCreator
+  public static GenderType fromGenderTypeString(String genderType) {
+
+<span class="nc bnc" id="L40" title="All 2 branches missed.">    for (GenderType genderTypeRequest : GenderType.values()) {</span>
+
+<span class="nc bnc" id="L42" title="All 2 branches missed.">      if (genderTypeRequest.getGenderType().equalsIgnoreCase(genderType)) {</span>
+<span class="nc" id="L43">        return genderTypeRequest;</span>
+      }
+
+    }
+<span class="nc" id="L47">    return null;</span>
+
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

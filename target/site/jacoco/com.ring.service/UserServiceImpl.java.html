@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.service</a> &gt; <span class="el_source">UserServiceImpl.java</span></div><h1>UserServiceImpl.java</h1><pre class="source lang-java linenums">package com.ring.service;
+
+import com.ring.bo.ClientBo;
+import com.ring.bo.NextScreenInformationBo;
+import com.ring.bo.UserProfileBo;
+import com.ring.constants.AppConstant;
+import com.ring.constants.RingMessageCode;
+import com.ring.dao.UserDao;
+import com.ring.dao.VehicleDao;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+import com.ring.util.ResponseUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+/**
+ * &lt;p&gt;
+ * Implementation class of SignUpService interface to provide services to the
+ * SignUpController class. Uses SignUpDao interface and its implementation class
+ * for database services.
+ * &lt;/p&gt;
+ */
+
+@Service(&quot;registerService&quot;)
+<span class="fc" id="L36">public class UserServiceImpl implements UserService {</span>
+
+  /**
+   * Dao object.
+   */
+  @Autowired
+  UserDao userDao;
+
+  @Autowired
+  VehicleDao dao;
+
+  @Autowired
+  NextScreenInformationBo next;
+
+  /**
+   * logger.
+   */
+<span class="fc" id="L53">  private static final Logger LOGGER = LogManager</span>
+<span class="fc" id="L54">      .getLogger(UserServiceImpl.class);</span>
+
+  /**
+   * method to register a user into app.
+   */
+
+  @Override
+  public int registerUser(UserProfileBo signUpBo)
+      throws RingException {
+
+    int userId;
+    try {
+<span class="fc" id="L66">      userId = userDao.registerUser(signUpBo);</span>
+<span class="fc" id="L67">    } catch (RingException exception) {</span>
+<span class="fc" id="L68">      LOGGER.error(exception.getMessage());</span>
+<span class="fc" id="L69">      LOGGER.debug(exception.getErrorCode().name());</span>
+<span class="fc" id="L70">      throw exception;</span>
+      // throw throwExceptionBasedOnErrorCode(daoException.getErrorCode().name());
+<span class="fc" id="L72">    }</span>
+
+<span class="fc" id="L74">    return userId;</span>
+  }
+
+  @Override
+  public void registerClient(ClientBo clientBo) {
+<span class="fc" id="L79">    userDao.registerClient(clientBo);</span>
+<span class="fc" id="L80">  }</span>
+
+  @Override
+  public Object getUserInfo(int userId) throws RingException {
+    try {
+<span class="fc" id="L85">      return userDao.getUserInfo(userId);</span>
+<span class="fc" id="L86">    } catch (EmptyResultDataAccessException ex) {</span>
+<span class="fc" id="L87">      throw new RingException(RingErrorCode.RA_2007, RingResponseCode.OK);</span>
+    }
+  }
+
+  public Object getNextScreeninfo(ClientBo clientBo) throws RingException {
+
+<span class="fc" id="L93">    NextScreenInformationBo nextScreenInformation = new NextScreenInformationBo();</span>
+<span class="fc" id="L94">    int count = (int) userDao.getUserDetails(clientBo.getUserId());</span>
+<span class="fc" id="L95">    boolean status = userDao.getClientDetails(clientBo.getClientId());</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (clientBo.getUserId() == AppConstant.NEGATIVE) {</span>
+<span class="fc" id="L97">      nextScreenInformation = getClientScreenDetails(status);</span>
+
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">    } else if (status != false) {</span>
+<span class="fc" id="L100">      nextScreenInformation = checkuserExist(clientBo, nextScreenInformation,</span>
+          count);
+    } else {
+<span class="nc" id="L103">      throw new RingException(RingErrorCode.RA_1006, RingResponseCode.OK);</span>
+    }
+<span class="fc" id="L105">    nextScreenInformation.setHelpUrl(next.getHelpUrl());</span>
+<span class="fc" id="L106">    return nextScreenInformation;</span>
+  }
+
+  private NextScreenInformationBo checkuserExist(ClientBo clientBo,
+      NextScreenInformationBo nextScreenInformation, int count)
+      throws RingException {
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">    if (count == AppConstant.ZERO) {</span>
+<span class="nc" id="L113">      throw new RingException(RingErrorCode.RA_1007, RingResponseCode.OK);</span>
+    } else {
+<span class="fc" id="L115">      nextScreenInformation = getVehicleScreenDetails(clientBo);</span>
+    }
+<span class="fc" id="L117">    return nextScreenInformation;</span>
+  }
+
+  private NextScreenInformationBo getVehicleScreenDetails(ClientBo clientBo)
+      throws RingException {
+
+<span class="fc" id="L123">    NextScreenInformationBo nextScreenInformation = new NextScreenInformationBo();</span>
+<span class="fc" id="L124">    List&lt;Map&lt;String, Object&gt;&gt; vehicleList = dao</span>
+<span class="fc" id="L125">        .getVehicleList(clientBo.getUserId());</span>
+<span class="fc" id="L126">    getVehicleDetails(nextScreenInformation, vehicleList);</span>
+<span class="fc" id="L127">    return nextScreenInformation;</span>
+  }
+
+  private void getVehicleDetails(NextScreenInformationBo nextScreenInformation,
+      List&lt;Map&lt;String, Object&gt;&gt; vehicleList) throws RingException {
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    if (vehicleList.size() &gt; 0) {</span>
+<span class="nc" id="L133">      nextScreenInformation.setCode(AppConstant.THREE);</span>
+<span class="nc" id="L134">      nextScreenInformation.setScreenMessage(</span>
+<span class="nc" id="L135">          ResponseUtil.genericMessage(RingMessageCode.RM_5002.name()));</span>
+    } else {
+<span class="fc" id="L137">      nextScreenInformation.setCode(AppConstant.FOUR);</span>
+<span class="fc" id="L138">      nextScreenInformation.setScreenMessage(</span>
+<span class="fc" id="L139">          ResponseUtil.genericMessage(RingMessageCode.RM_5003.name()));</span>
+
+    }
+<span class="fc" id="L142">  }</span>
+
+  private NextScreenInformationBo getClientScreenDetails(boolean status)
+      throws RingException {
+<span class="fc" id="L146">    NextScreenInformationBo nextScreenInformation = new NextScreenInformationBo();</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">    if (status) {</span>
+
+<span class="fc" id="L149">      nextScreenInformation.setCode(AppConstant.TWO);</span>
+<span class="fc" id="L150">      nextScreenInformation.setScreenMessage(</span>
+<span class="fc" id="L151">          ResponseUtil.genericMessage(RingMessageCode.RM_5001.name()));</span>
+    } else {
+<span class="fc" id="L153">      nextScreenInformation.setCode(AppConstant.ONE);</span>
+<span class="fc" id="L154">      nextScreenInformation.setScreenMessage(</span>
+<span class="fc" id="L155">          ResponseUtil.genericMessage(RingMessageCode.RM_5000.name()));</span>
+
+    }
+<span class="fc" id="L158">    return nextScreenInformation;</span>
+  }
+
+  public void updateInfo(int userId, UserProfileBo userProfileBo)
+      throws RingException {
+<span class="fc" id="L163">    String query = updateFields(userProfileBo);</span>
+    int returnValue;
+
+<span class="fc" id="L166">    returnValue = userDao.updateInfo(userId, userProfileBo, query);</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">    if (returnValue == 0) {</span>
+<span class="fc" id="L168">      throw new RingException(RingErrorCode.RA_2007, RingResponseCode.OK);</span>
+    }
+<span class="fc" id="L170">  }</span>
+
+  private String updateFields(UserProfileBo userProfileBo) {
+<span class="fc" id="L173">    StringBuilder query = new StringBuilder(</span>
+        &quot;update tbl_user set usr_user_name = ?,usr_lastmodified_datetime = ?&quot;);
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">    if (userProfileBo.getGender() != null) {</span>
+<span class="fc" id="L176">      updateStringFields(userProfileBo.getGender().getGenderType(),</span>
+          &quot;usr_gender&quot;,
+          query);
+    } else {
+<span class="nc" id="L180">      updateStringFields(null, &quot;usr_gender&quot;,</span>
+          query);
+    }
+<span class="fc" id="L183">    updateStringFields(userProfileBo.getDob(), &quot;usr_date_of_birth&quot;, query);</span>
+<span class="fc" id="L184">    updateStringFields(userProfileBo.getEmail(), &quot;usr_email&quot;, query);</span>
+<span class="fc" id="L185">    updateStringFields(userProfileBo.getPhoneNumber(), &quot;usr_phone_number&quot;,</span>
+        query);
+<span class="fc" id="L187">    return query.append(&quot; where usr_user_id=?&quot;).toString();</span>
+
+  }
+
+  private void updateStringFields(String value, String columnName,
+      StringBuilder query) {
+<span class="fc bfc" id="L193" title="All 2 branches covered.">    if (value != null) {</span>
+<span class="fc" id="L194">      query.append(&quot;,&quot; + columnName + &quot;='&quot; + value.trim() + &quot;'&quot;);</span>
+    } else {
+<span class="fc" id="L196">      query.append(&quot;,&quot; + columnName + &quot;=&quot; + value);</span>
+    }
+<span class="fc" id="L198">  }</span>
+
+  @Override
+  public List&lt;String&gt; getQuaters() throws RingException {
+<span class="fc" id="L202">    List&lt;String&gt; quarters = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L203">    LocalDate dateInfirstMonthInAQuarter = LocalDate.now();</span>
+    do {
+<span class="fc" id="L205">      quarters.add(getMonthYearString(dateInfirstMonthInAQuarter.minusMonths(2))</span>
+<span class="fc" id="L206">          + &quot;-&quot; + getMonthYearString(dateInfirstMonthInAQuarter));</span>
+<span class="fc" id="L207">      dateInfirstMonthInAQuarter = dateInfirstMonthInAQuarter.minusMonths(3);</span>
+<span class="fc" id="L208">    } while (!LocalDate.now().minusMonths(12).getMonth()</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        .equals(dateInfirstMonthInAQuarter.getMonth()));</span>
+<span class="fc" id="L210">    return quarters;</span>
+  }
+
+  private static String getMonthYearString(LocalDate date) {
+<span class="fc" id="L214">    return date.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH)</span>
+<span class="fc" id="L215">        .toUpperCase() + &quot; &quot; + date.getYear();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

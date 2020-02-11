@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.service</a> &gt; <span class="el_source">VehicleServiceImpl.java</span></div><h1>VehicleServiceImpl.java</h1><pre class="source lang-java linenums">package com.ring.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ring.bo.PressureBo;
+import com.ring.bo.VehicleBo;
+import com.ring.dao.VehicleDao;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+
+@Service
+<span class="fc" id="L17">public class VehicleServiceImpl implements VehicleService {</span>
+
+  @Autowired
+  VehicleDao dao;
+
+  @Override
+  public Map&lt;String, Object&gt; addVehicle(int userId,
+      VehicleBo vehicleDetails) throws RingException {
+    Map&lt;String, Object&gt; map;
+
+    try {
+<span class="fc" id="L28">      map = dao.addVehicle(userId, vehicleDetails);</span>
+
+<span class="fc" id="L30">    } catch (RingException exception) {</span>
+<span class="fc" id="L31">      throw exception;</span>
+<span class="fc" id="L32">    }</span>
+<span class="fc" id="L33">    return map;</span>
+  }
+
+
+  @Override
+  public void editPressureSettings(int userId, int vehicleId,
+      PressureBo vehiclePressureDetails) {
+<span class="nc" id="L40">    dao.editPressureSettings(userId, vehicleId, vehiclePressureDetails);</span>
+
+<span class="nc" id="L42">  }</span>
+
+  @Override
+  public List&lt;Map&lt;String, Object&gt;&gt; getVehicleList(int userId)
+      throws RingException {
+<span class="fc" id="L47">    List&lt;Map&lt;String, Object&gt;&gt; vehicleList = dao.getVehicleList(userId);</span>
+<span class="fc" id="L48">    return vehicleList;</span>
+  }
+
+  @Override
+  public Map&lt;String, Object&gt; getVehicle(int vehicleId)
+      throws RingException {
+
+<span class="fc" id="L55">     Map&lt;String, Object&gt; vehicle = dao.getVehicle(vehicleId);</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">    if (vehicle.isEmpty()) {</span>
+<span class="nc" id="L57">      throw new RingException(RingErrorCode.RA_3000, RingResponseCode.OK);</span>
+    }
+<span class="fc" id="L59">    return vehicle;</span>
+  }
+
+  @Override
+  public void updateDefaultstatus(int userId, int vehicleId) {
+<span class="nc" id="L64">    dao.updateDefaultstatus(userId, vehicleId);</span>
+<span class="nc" id="L65">  }</span>
+
+  @Override
+  public void deleteVehicle(int vehicleId, int userId) throws RingException {
+<span class="fc" id="L69">    Map&lt;String, Object&gt; vehicle = dao.getVehicle(vehicleId);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">    if (vehicle.isEmpty()) {</span>
+<span class="nc" id="L71">      throw new RingException(RingErrorCode.RA_3000, RingResponseCode.OK);</span>
+    }
+<span class="fc" id="L73">    dao.deleteVehicle(vehicleId, userId);</span>
+
+<span class="fc" id="L75">  }</span>
+
+  @Override
+  public void editVehicle(int userId, int vehicleId, VehicleBo vehicleDetails)
+      throws RingException {
+<span class="nc" id="L80">    dao.editVehicle(userId, vehicleId, vehicleDetails);</span>
+
+<span class="nc" id="L82">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserProfileBo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.bo</a> &gt; <span class="el_source">UserProfileBo.java</span></div><h1>UserProfileBo.java</h1><pre class="source lang-java linenums">package com.ring.bo;
+
+import com.ring.constants.GenderType;
+import com.ring.constants.LoginType;
+import com.ring.constants.Status;
+
+import java.sql.Timestamp;
+
+<span class="fc" id="L9">public class UserProfileBo extends UserBo {</span>
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -8258413168222908092L;
+
+  private LoginType loginType;
+  private String email;
+  private GenderType gender;
+  private String dob;
+  private String userName;
+  private String phoneNumber;
+  private Status status;
+  private int userRole;
+  private int createdUserId;
+  private Timestamp createdDateTime;
+  private int lastMOdifiedUserId;
+  private Timestamp lastMOdifiedDateTime;
+
+  public LoginType getLoginType() {
+<span class="fc" id="L30">    return loginType;</span>
+  }
+  public String getEmail() {
+<span class="fc" id="L33">    return email;</span>
+  }
+  public void setEmail(String email) {
+<span class="fc" id="L36">    this.email = email;</span>
+<span class="fc" id="L37">  }</span>
+  public void setLoginType(LoginType loginType) {
+<span class="fc" id="L39">    this.loginType = loginType;</span>
+<span class="fc" id="L40">  }</span>
+  
+  public GenderType getGender() {
+<span class="fc" id="L43">    return gender;</span>
+  }
+  
+ public void setGender(GenderType gender) {
+<span class="fc" id="L47">    this.gender = gender;</span>
+<span class="fc" id="L48">  }</span>
+  /* public void setGender(String gender) {
+    this.gender = GenderType.setGenderTypeUsingCustomInput(gender);
+  }*/
+  public String getDob() {
+<span class="fc" id="L53">    return dob;</span>
+  }
+  public void setDob(String dob) {
+<span class="nc" id="L56">    this.dob = dob;</span>
+<span class="nc" id="L57">  }</span>
+  public String getUserName() {
+<span class="fc" id="L59">    return userName;</span>
+  }
+  public void setUserName(String userName) {
+<span class="fc" id="L62">    this.userName = userName;</span>
+<span class="fc" id="L63">  }</span>
+  public Status getStatus() {
+<span class="nc" id="L65">    return status;</span>
+  }
+  public void setStatus(Status status) {
+<span class="nc" id="L68">    this.status = status;</span>
+<span class="nc" id="L69">  }</span>
+  public int getUserRole() {
+<span class="nc" id="L71">    return userRole;</span>
+  }
+  public void setUserRole(int userRole) {
+<span class="nc" id="L74">    this.userRole = userRole;</span>
+<span class="nc" id="L75">  }</span>
+  public int getCreatedUserId() {
+<span class="nc" id="L77">    return createdUserId;</span>
+  }
+  public void setCreatedUserId(int createdUserId) {
+<span class="nc" id="L80">    this.createdUserId = createdUserId;</span>
+<span class="nc" id="L81">  }</span>
+  public Timestamp getCreatedDateTime() {
+<span class="nc" id="L83">    return createdDateTime;</span>
+  }
+  public void setCreatedDateTime(Timestamp createdDateTime) {
+<span class="nc" id="L86">    this.createdDateTime = createdDateTime;</span>
+<span class="nc" id="L87">  }</span>
+  public int getLastMOdifiedUserId() {
+<span class="nc" id="L89">    return lastMOdifiedUserId;</span>
+  }
+  public void setLastMOdifiedUserId(int lastMOdifiedUserId) {
+<span class="nc" id="L92">    this.lastMOdifiedUserId = lastMOdifiedUserId;</span>
+<span class="nc" id="L93">  }</span>
+  public Timestamp getLastMOdifiedDateTime() {
+<span class="nc" id="L95">    return lastMOdifiedDateTime;</span>
+  }
+  public void setLastMOdifiedDateTime(Timestamp lastMOdifiedDateTime) {
+<span class="nc" id="L98">    this.lastMOdifiedDateTime = lastMOdifiedDateTime;</span>
+<span class="nc" id="L99">  }</span>
+  public String getPhoneNumber() {
+<span class="fc" id="L101">    return phoneNumber;</span>
+  }
+  public void setPhoneNumber(String phoneNumber) {
+<span class="nc" id="L104">    this.phoneNumber = phoneNumber;</span>
+<span class="nc" id="L105">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

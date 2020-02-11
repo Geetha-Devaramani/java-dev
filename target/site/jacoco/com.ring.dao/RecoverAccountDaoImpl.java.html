@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecoverAccountDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.dao</a> &gt; <span class="el_source">RecoverAccountDaoImpl.java</span></div><h1>RecoverAccountDaoImpl.java</h1><pre class="source lang-java linenums">package com.ring.dao;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ring.bo.ResetCredentialsBo;
+import com.ring.bo.UserProfileBo;
+import com.ring.constants.Status;
+import com.ring.constants.TokenType;
+import com.ring.util.DaoUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * &lt;p&gt;
+ * Implementation class of ForgotPasswordDao interface. to provide services to
+ * the ForgotPasswordServiceImpl class.
+ * &lt;/p&gt;
+ */
+@Repository(&quot;recoverAccountDao&quot;)
+<span class="fc" id="L23">public class RecoverAccountDaoImpl implements RecoverAccountDao {</span>
+
+  /**
+   * Jdbc template.
+   */
+  @Autowired
+  private JdbcTemplate template;
+
+  @Autowired
+  PasswordEncoder passwordEncoder;
+
+<span class="fc" id="L34">  private ObjectMapper mapper = new ObjectMapper();</span>
+
+  private static final String PERSIST_TOKEN_QUERY = &quot;INSERT INTO public.tbl_token&quot;
+      + &quot;(tok_usr_userid, tok_token_data, tok_token_type, &quot;
+      + &quot;tok_status, tok_created_user_id, tok_created_datetime, tok_lastmodified_user_id, &quot;
+      + &quot;tok_lastmodified_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?) &quot;
+      + &quot;ON CONFLICT (tok_usr_userid) DO UPDATE SET tok_token_data=?, &quot;
+      + &quot;tok_status=?, tok_created_user_id = ?, tok_created_datetime = ?, &quot;
+      + &quot;tok_lastmodified_user_id=?, tok_lastmodified_datetime=?&quot;;
+
+  private static final String GET_USER_INFO_BASED_ON_EMAIL_QUERY = &quot;SELECT &quot;
+      + &quot;usr_user_name \&quot;userName\&quot; , usr_user_id \&quot;userId\&quot;, usr_login_id \&quot;loginId\&quot; &quot;
+      + &quot;FROM tbl_user WHERE usr_login_id = ? AND usr_status = 'Active' &quot;
+      + &quot;AND usr_login_type = 'Application'&quot;;
+
+  private static final String GET_TOKEN_INFO_QUERY = &quot;SELECT tok_usr_userid &quot;
+      + &quot;\&quot;userId\&quot;, tok_token_data \&quot;resetToken\&quot;, tok_tokenid \&quot;resetTokenId\&quot;,&quot;
+      + &quot; tok_created_datetime \&quot;resetTokenExpTime\&quot; FROM public.tbl_token &quot;
+      + &quot;WHERE tok_token_data = ? AND tok_status='Active'&quot;;
+
+  private static final String RESET_CREDENTIAL_QUERY = &quot;UPDATE public.tbl_user &quot;
+      + &quot;SET usr_password=?, usr_lastmodified_user_id=?, &quot;
+      + &quot;usr_lastmodified_datetime=? WHERE usr_user_id=?&quot;;
+
+  private static final String DEACTIVATE_TOKEN_QUERY = &quot;UPDATE public.tbl_token &quot;
+      + &quot;SET tok_status=?, tok_lastmodified_datetime=? WHERE tok_tokenid=?&quot;;
+
+  /**
+   * Method to persist token related data in database.
+   */
+  @Override
+  public void persistTokenInDb(int userId, String token) {
+<span class="fc" id="L66">    template.update(PERSIST_TOKEN_QUERY, userId, token,</span>
+<span class="fc" id="L67">        TokenType.EMAIL.getTokenType(), Status.ACTIVE.getStatus(), userId,</span>
+<span class="fc" id="L68">        DaoUtil.getDate(), userId, DaoUtil.getDate(), token,</span>
+<span class="fc" id="L69">        Status.ACTIVE.getStatus(), userId, DaoUtil.getDate(), userId,</span>
+<span class="fc" id="L70">        DaoUtil.getDate());</span>
+
+<span class="fc" id="L72">  }</span>
+
+  @Override
+  public UserProfileBo getUserInfoFromDb(String email) {
+<span class="fc" id="L76">    return mapper.convertValue(</span>
+<span class="fc" id="L77">        template.queryForMap(GET_USER_INFO_BASED_ON_EMAIL_QUERY, email),</span>
+        UserProfileBo.class);
+  }
+
+  @Override
+  public ResetCredentialsBo getDataBasedOnToken(String token) {
+<span class="fc" id="L83">    return mapper.convertValue(</span>
+<span class="fc" id="L84">        template.queryForMap(GET_TOKEN_INFO_QUERY, token),</span>
+        ResetCredentialsBo.class);
+  }
+
+  @Override
+  @Transactional
+  public void resetPassword(String password, ResetCredentialsBo dataFromDb) {
+<span class="fc" id="L91">    template.update(RESET_CREDENTIAL_QUERY,</span>
+<span class="fc" id="L92">        passwordEncoder.encode(password),</span>
+<span class="fc" id="L93">        dataFromDb.getUserId(), DaoUtil.getDate(),</span>
+<span class="fc" id="L94">        dataFromDb.getUserId());</span>
+<span class="fc" id="L95">    deactivateToken(dataFromDb.getResetTokenId());</span>
+
+<span class="fc" id="L97">  }</span>
+
+  @Override
+  public void deactivateToken(int tokenId) {
+<span class="fc" id="L101">    template.update(DEACTIVATE_TOKEN_QUERY, Status.INACTIVE.getStatus(),</span>
+<span class="fc" id="L102">        DaoUtil.getDate(),</span>
+<span class="fc" id="L103">        tokenId);</span>
+
+<span class="fc" id="L105">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

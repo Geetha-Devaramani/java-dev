@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceServerConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.oauth</a> &gt; <span class="el_source">ResourceServerConfig.java</span></div><h1>ResourceServerConfig.java</h1><pre class="source lang-java linenums">package com.ring.oauth;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+
+import javax.annotation.Resource;
+
+@EnableResourceServer
+@Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE - 1)
+
+/**In Spring Boot 2, if we want our own security configuration, we can simply add a custom WebSecurityConfigurerAdapter. This will disable the default auto-configuration and enable our custom security configuration**/
+<span class="nc" id="L24">public class ResourceServerConfig extends WebSecurityConfigurerAdapter {</span>
+
+  @Autowired
+  private AuthenticationManager authenticationManager;
+
+  @Resource(
+      name = &quot;loginService&quot;)
+  UserDetailsService customUserDetailsService;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+
+<span class="nc" id="L39">    http.csrf().disable()</span>
+<span class="nc" id="L40">        .authorizeRequests()</span>
+<span class="nc" id="L41">        .antMatchers(HttpMethod.OPTIONS).permitAll()</span>
+<span class="nc" id="L42">        .antMatchers(&quot;/app/login&quot;).permitAll()</span>
+<span class="nc" id="L43">        .anyRequest().authenticated();</span>
+
+<span class="nc" id="L45">  }</span>
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+<span class="nc" id="L50">    auth</span>
+<span class="nc" id="L51">        .parentAuthenticationManager(authenticationManager)</span>
+<span class="nc" id="L52">        .userDetailsService(customUserDetailsService)</span>
+<span class="nc" id="L53">        .passwordEncoder(passwordEncoder);</span>
+<span class="nc" id="L54">  }</span>
+
+  @Override
+  public void configure(WebSecurity web) throws Exception {
+<span class="nc" id="L58">    web</span>
+<span class="nc" id="L59">        .ignoring()</span>
+<span class="nc" id="L60">        .antMatchers(&quot;/app/recover-account&quot;, &quot;/app/reset-credentials&quot;, &quot;/users&quot;,</span>
+            &quot;/app/social-login&quot;, &quot;/app/clients&quot;, &quot;/app/screen&quot;);
+
+<span class="nc" id="L63">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

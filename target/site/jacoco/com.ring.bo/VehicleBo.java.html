@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VehicleBo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.bo</a> &gt; <span class="el_source">VehicleBo.java</span></div><h1>VehicleBo.java</h1><pre class="source lang-java linenums">package com.ring.bo;
+
+import com.ring.constants.Status;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+<span class="fc" id="L8">public class VehicleBo extends UserBo {</span>
+
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -755632970953494448L;
+
+  private Integer vehicleId;
+  private String vehicleName;
+  private String registrationNumber;
+  private String carMake;
+  private String carModel;
+  private String vin;
+  private String bodyStyle;
+  private String yearOfManufacture;
+  boolean isDefault;
+  private List&lt;PressureBo&gt; load;
+  private Status status;
+  private int createdUserId;
+  private Timestamp createdDateTime;
+  private int lastMOdifiedUserId;
+  private Timestamp lastMOdifiedDateTime;
+
+  private VehicleAutoDataBo vehicleAutoData;
+
+  public Integer getVehicleId() {
+<span class="nc" id="L34">    return vehicleId;</span>
+  }
+  public void setVehicleId(Integer vehicleId) {
+<span class="nc" id="L37">    this.vehicleId = vehicleId;</span>
+<span class="nc" id="L38">  }</span>
+  public String getVehicleName() {
+<span class="fc" id="L40">    return vehicleName;</span>
+  }
+  public void setVehicleName(String vehicleName) {
+<span class="fc" id="L43">    this.vehicleName = vehicleName;</span>
+<span class="fc" id="L44">  }</span>
+  public String getRegistrationNumber() {
+<span class="fc" id="L46">    return registrationNumber;</span>
+  }
+  public void setRegistrationNumber(String registrationNumber) {
+<span class="fc" id="L49">    this.registrationNumber = registrationNumber;</span>
+<span class="fc" id="L50">  }</span>
+  public String getCarMake() {
+<span class="fc" id="L52">    return carMake;</span>
+  }
+  public void setCarMake(String carMake) {
+<span class="fc" id="L55">    this.carMake = carMake;</span>
+<span class="fc" id="L56">  }</span>
+  public String getCarModel() {
+<span class="fc" id="L58">    return carModel;</span>
+  }
+  public void setCarModel(String carModel) {
+<span class="fc" id="L61">    this.carModel = carModel;</span>
+<span class="fc" id="L62">  }</span>
+  public String getVin() {
+<span class="fc" id="L64">    return vin;</span>
+  }
+  public void setVin(String vin) {
+<span class="fc" id="L67">    this.vin = vin;</span>
+<span class="fc" id="L68">  }</span>
+  public String getYearOfManufacture() {
+<span class="fc" id="L70">    return yearOfManufacture;</span>
+  }
+  public void setYearOfManufacture(String yearOfManufacture) {
+<span class="fc" id="L73">    this.yearOfManufacture = yearOfManufacture;</span>
+<span class="fc" id="L74">  }</span>
+  public boolean isDefault() {
+<span class="fc" id="L76">    return isDefault;</span>
+  }
+  public void setDefault(boolean isDefault) {
+<span class="fc" id="L79">    this.isDefault = isDefault;</span>
+<span class="fc" id="L80">  }</span>
+
+  public Status getStatus() {
+<span class="nc" id="L83">    return status;</span>
+  }
+  public void setStatus(Status status) {
+<span class="nc" id="L86">    this.status = status;</span>
+<span class="nc" id="L87">  }</span>
+  public int getCreatedUserId() {
+<span class="nc" id="L89">    return createdUserId;</span>
+  }
+  public void setCreatedUserId(int createdUserId) {
+<span class="nc" id="L92">    this.createdUserId = createdUserId;</span>
+<span class="nc" id="L93">  }</span>
+  public Timestamp getCreatedDateTime() {
+<span class="nc" id="L95">    return createdDateTime;</span>
+  }
+  public void setCreatedDateTime(Timestamp createdDateTime) {
+<span class="nc" id="L98">    this.createdDateTime = createdDateTime;</span>
+<span class="nc" id="L99">  }</span>
+  public int getLastMOdifiedUserId() {
+<span class="nc" id="L101">    return lastMOdifiedUserId;</span>
+  }
+  public void setLastMOdifiedUserId(int lastMOdifiedUserId) {
+<span class="nc" id="L104">    this.lastMOdifiedUserId = lastMOdifiedUserId;</span>
+<span class="nc" id="L105">  }</span>
+  public Timestamp getLastMOdifiedDateTime() {
+<span class="nc" id="L107">    return lastMOdifiedDateTime;</span>
+  }
+  public void setLastMOdifiedDateTime(Timestamp lastMOdifiedDateTime) {
+<span class="nc" id="L110">    this.lastMOdifiedDateTime = lastMOdifiedDateTime;</span>
+<span class="nc" id="L111">  }</span>
+
+  public VehicleAutoDataBo getVehicleAutoData() {
+<span class="fc" id="L114">    return vehicleAutoData;</span>
+  }
+  public void setVehicleAutoData(VehicleAutoDataBo vehicleAutoData) {
+<span class="fc" id="L117">    this.vehicleAutoData = vehicleAutoData;</span>
+<span class="fc" id="L118">  }</span>
+  public List&lt;PressureBo&gt; getLoad() {
+<span class="fc" id="L120">    return load;</span>
+  }
+  public void setLoad(List&lt;PressureBo&gt; load) {
+<span class="fc" id="L123">    this.load = load;</span>
+<span class="fc" id="L124">  }</span>
+  public String getBodyStyle() {
+<span class="fc" id="L126">    return bodyStyle;</span>
+  }
+  public void setBodyStyle(String bodyStyle) {
+<span class="nc" id="L129">    this.bodyStyle = bodyStyle;</span>
+<span class="nc" id="L130">  }</span>
+  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

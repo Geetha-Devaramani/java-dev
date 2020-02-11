@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SavingController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.controller</a> &gt; <span class="el_source">SavingController.java</span></div><h1>SavingController.java</h1><pre class="source lang-java linenums">package com.ring.controller;
+
+import com.ring.bo.ResponseBo;
+import com.ring.constants.PressureUnitType;
+import com.ring.constants.RingMessageCode;
+import com.ring.constants.UrlConstantsBo;
+import com.ring.exceptions.RingException;
+import com.ring.service.SavingServiceImpl;
+import com.ring.util.ResponseUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(UrlConstantsBo.SAVING+UrlConstantsBo.USER_ID)
+<span class="nc" id="L21">public class SavingController {</span>
+  
+  @Autowired
+  SavingServiceImpl savingServiceImpl;
+  
+  @RequestMapping(
+      value = UrlConstantsBo.SAVINGDATA + UrlConstantsBo.INITIALPRESSURE +
+      UrlConstantsBo.TARGETPRESSURE+UrlConstantsBo.PRESSUREUNIT_TYPE,
+      method = RequestMethod.GET)
+  public ResponseEntity&lt;ResponseBo&gt; getSavingData(
+      @PathVariable(&quot;initialPressure&quot;) double initialPressure,
+      @PathVariable(&quot;targetPressure&quot;) double targetPressure,
+      @PathVariable(&quot;pressureUnitType&quot;) PressureUnitType pressureUnitType,
+      @PathVariable(&quot;userId&quot;) int userId) throws RingException {
+<span class="nc" id="L35">    return new ResponseEntity&lt;&gt;( ResponseUtil.genericResponseData</span>
+<span class="nc" id="L36">        (RingMessageCode.RM_6000.name(),savingServiceImpl.getSavingData(initialPressure, targetPressure, userId, pressureUnitType)), HttpStatus.OK);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

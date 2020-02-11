@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserProfileBoValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.util</a> &gt; <span class="el_source">UserProfileBoValidator.java</span></div><h1>UserProfileBoValidator.java</h1><pre class="source lang-java linenums">package com.ring.util;
+
+import com.ring.bo.ResetCredentialsBo;
+import com.ring.bo.SocialLoginBo;
+import com.ring.bo.UserProfileBo;
+import com.ring.exceptions.RingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+
+@Service
+<span class="nc" id="L14">public class UserProfileBoValidator {</span>
+
+  @Autowired
+  UserInfoValidator validator;
+
+  public void validateForSignup(UserProfileBo profileBo) throws RingException {
+<span class="nc" id="L20">    validator.validateEmail(profileBo.getLoginId());</span>
+<span class="nc" id="L21">    validator.validatePassword(profileBo.getPassword());</span>
+<span class="nc" id="L22">    validator.validateUserName(profileBo.getUserName());</span>
+
+<span class="nc" id="L24">  }</span>
+
+  public void validateForUpdate(UserProfileBo profileBo) throws RingException {
+<span class="nc" id="L27">    validator.validateUserName(profileBo.getUserName());</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">    if (!Objects.isNull(profileBo.getEmail())) {</span>
+<span class="nc" id="L29">      validator.validateEmail(profileBo.getEmail());</span>
+    }
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    if (!Objects.isNull(profileBo.getPhoneNumber())) {</span>
+<span class="nc" id="L32">      validator.validatePhoneNumber(profileBo.getPhoneNumber());</span>
+    }
+<span class="nc" id="L34">  }</span>
+
+  public void validateForForgotPassword(UserProfileBo profileBo)
+      throws RingException {
+<span class="nc" id="L38">    validator.validateEmail(profileBo.getEmail());</span>
+<span class="nc" id="L39">  }</span>
+
+  public void validateForSocialLogin(SocialLoginBo socialLoginBo)
+      throws RingException {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">    if (!Objects.isNull(socialLoginBo.getEmail())) {</span>
+<span class="nc" id="L44">      validator.validateEmail(socialLoginBo.getEmail());</span>
+    }
+<span class="nc" id="L46">  }</span>
+
+  public void validateForResetCredentials(ResetCredentialsBo resetPasswordBo) throws RingException {
+<span class="nc" id="L49">    validator.validatePassword(resetPasswordBo.getPassword());</span>
+    
+<span class="nc" id="L51">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

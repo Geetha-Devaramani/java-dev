@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecoverAccountController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.controller</a> &gt; <span class="el_source">RecoverAccountController.java</span></div><h1>RecoverAccountController.java</h1><pre class="source lang-java linenums">package com.ring.controller;
+
+import com.ring.bo.ResetCredentialsBo;
+import com.ring.bo.ResponseBo;
+import com.ring.bo.UserProfileBo;
+import com.ring.constants.RingMessageCode;
+import com.ring.constants.UrlConstantsBo;
+import com.ring.exceptions.RingException;
+import com.ring.service.RecoverAccountService;
+import com.ring.util.ResponseUtil;
+import com.ring.util.UserProfileBoValidator;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+@RestController
+@RequestMapping(UrlConstantsBo.APPLICATION)
+<span class="fc" id="L26">public class RecoverAccountController {</span>
+  
+  @Autowired
+  private RecoverAccountService recoverAccountService;
+
+  @Autowired
+  private UserProfileBoValidator userProfileBoValidator;
+  
+  @RequestMapping(
+      value = UrlConstantsBo.RECOVER_ACCOUNT,
+      method = RequestMethod.POST)
+  public ResponseEntity&lt;ResponseBo&gt; recoverAccountHandler(
+      final @RequestBody UserProfileBo resetPasswordBo)
+      throws RingException {
+<span class="fc" id="L40">    userProfileBoValidator.validateForForgotPassword(resetPasswordBo);</span>
+<span class="fc" id="L41">    recoverAccountService.sendMail(resetPasswordBo.getEmail());</span>
+<span class="fc" id="L42">    return new ResponseEntity&lt;&gt;(</span>
+<span class="fc" id="L43">        ResponseUtil.genericResponse(</span>
+<span class="fc" id="L44">            RingMessageCode.RM_1002.name()),</span>
+        HttpStatus.OK);
+
+  }
+  
+  @RequestMapping(
+      value = UrlConstantsBo.RESET_CREDENTIALS,
+      method = RequestMethod.PUT)
+  public ResponseEntity&lt;ResponseBo&gt; resetCredentialsHandler(
+      final @RequestBody ResetCredentialsBo resetPasswordBo)
+      throws RingException {
+<span class="fc" id="L55">    userProfileBoValidator.validateForResetCredentials(resetPasswordBo);</span>
+<span class="fc" id="L56">    recoverAccountService.resetCredentials(resetPasswordBo);</span>
+<span class="fc" id="L57">    return new ResponseEntity&lt;&gt;(</span>
+<span class="fc" id="L58">        ResponseUtil.genericResponse(</span>
+<span class="fc" id="L59">            RingMessageCode.RM_1004.name()),</span>
+        HttpStatus.OK);
+
+  }
+  
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

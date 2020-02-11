@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.exceptions</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.ring.exceptions;
+
+import com.ring.bo.ResponseBo;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.InputStream;
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+
+@ControllerAdvice
+<span class="nc" id="L19">public class GlobalExceptionHandler {</span>
+
+<span class="nc" id="L21">  private static final Logger LOGGER = LogManager</span>
+<span class="nc" id="L22">      .getLogger(GlobalExceptionHandler.class);</span>
+
+  private Properties prop;
+
+  @PostConstruct
+  public void init() {
+<span class="nc" id="L28">    prop = new Properties();</span>
+    try {
+<span class="nc" id="L30">      InputStream exceptionFileProperties = RingException.class</span>
+<span class="nc" id="L31">          .getResourceAsStream(&quot;/exceptioncode.properties&quot;);</span>
+<span class="nc" id="L32">      prop.load(exceptionFileProperties);</span>
+<span class="nc" id="L33">    } catch (Exception exception) {</span>
+<span class="nc" id="L34">      LOGGER.error(&quot;Property file not found or not properly loaded&quot;);</span>
+<span class="nc" id="L35">    }</span>
+<span class="nc" id="L36">  }</span>
+
+  /**
+   * ExceptionHandler method for RingException.
+   */
+  @ExceptionHandler(RingException.class)
+  @ResponseBody
+  public ResponseEntity&lt;ResponseBo&gt; handleConnectedCarException(
+      RingException ex) {
+<span class="nc" id="L45">    ResponseBo errorResponse = new ResponseBo();</span>
+<span class="nc" id="L46">    HttpStatus httpResponseCode = HttpStatus.BAD_REQUEST;</span>
+    try {
+<span class="nc" id="L48">      RingResponseCode responseCode = ex.getResponseCode();</span>
+<span class="nc" id="L49">      httpResponseCode = responseCode.getHttpStatusFromEnum(responseCode);</span>
+<span class="nc" id="L50">      errorResponse.setCode(</span>
+<span class="nc" id="L51">          Integer.parseInt(ex.getErrorCode().name().replace(&quot;RA_&quot;, &quot;&quot;)));</span>
+<span class="nc" id="L52">      errorResponse.setMessage(</span>
+<span class="nc" id="L53">          prop.getProperty(ex.getErrorCode().name().replace(&quot;RA_&quot;, &quot;&quot;)));</span>
+
+<span class="nc" id="L55">    } catch (Exception exception) {</span>
+<span class="nc" id="L56">      LOGGER.error(&quot;Exception in Global Exception Handler&quot;, exception);</span>
+<span class="nc" id="L57">      errorResponse.setCode(500);</span>
+<span class="nc" id="L58">      errorResponse</span>
+<span class="nc" id="L59">          .setMessage(&quot;Problem occured in Global Exception Handler&quot;);</span>
+<span class="nc" id="L60">      httpResponseCode = HttpStatus.INTERNAL_SERVER_ERROR;</span>
+<span class="nc" id="L61">    }</span>
+<span class="nc" id="L62">    return new ResponseEntity&lt;&gt;(errorResponse, httpResponseCode);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

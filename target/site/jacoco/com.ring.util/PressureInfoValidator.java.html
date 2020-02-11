@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PressureInfoValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tyreinflator-service Maven Webapp</a> &gt; <a href="index.source.html" class="el_package">com.ring.util</a> &gt; <span class="el_source">PressureInfoValidator.java</span></div><h1>PressureInfoValidator.java</h1><pre class="source lang-java linenums">package com.ring.util;
+
+import com.ring.constants.LoadType;
+import com.ring.constants.PressureUnitType;
+import com.ring.exceptions.RingErrorCode;
+import com.ring.exceptions.RingException;
+import com.ring.exceptions.RingResponseCode;
+
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="nc" id="L12">public class PressureInfoValidator extends BoValidator {</span>
+
+  public void validateFrontTyrePressure(Double frontTyrePressure)
+      throws RingException {
+<span class="nc" id="L16">    validateObject(frontTyrePressure,</span>
+        new RingException(RingErrorCode.RA_5000, RingResponseCode.OK));
+<span class="nc" id="L18">  }</span>
+
+  public void validateRearTyrePressure(Double rearTyrePressure)
+      throws RingException {
+<span class="nc" id="L22">    validateObject(rearTyrePressure,</span>
+        new RingException(RingErrorCode.RA_5001, RingResponseCode.OK));
+<span class="nc" id="L24">  }</span>
+
+  public void validateTyreSize(String tyreSize) throws RingException {
+<span class="nc" id="L27">    validateString(tyreSize,</span>
+        new RingException(RingErrorCode.RA_5002, RingResponseCode.OK));
+<span class="nc" id="L29">  }</span>
+
+  public void validateLoadType(LoadType loadType)
+      throws RingException {
+<span class="nc" id="L33">    validateObject(loadType,</span>
+        new RingException(RingErrorCode.RA_5004, RingResponseCode.OK));
+<span class="nc" id="L35">  }</span>
+
+  public void validatePressureUnitType(PressureUnitType pressureUnitType)
+      throws RingException {
+<span class="nc" id="L39">    validateObject(pressureUnitType,</span>
+        new RingException(RingErrorCode.RA_5003, RingResponseCode.OK));
+<span class="nc" id="L41">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.8.201612092310</span></div></body></html>

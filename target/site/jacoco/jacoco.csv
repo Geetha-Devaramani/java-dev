@@ -1,0 +1,80 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+tyreinflator-service Maven Webapp,com.ring.service,DocumentServiceImpl,21,0,0,0,7,0,2,0,2,0
+tyreinflator-service Maven Webapp,com.ring.service,FacebookServiceProvider,0,83,0,0,0,18,0,4,0,4
+tyreinflator-service Maven Webapp,com.ring.service,RecoverAccountServiceImpl,0,99,0,2,0,28,0,5,0,4
+tyreinflator-service Maven Webapp,com.ring.service,EmailServiceImpl,129,0,0,0,32,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.service,SocialLoginServiceImplementation,0,90,0,2,0,15,0,4,0,3
+tyreinflator-service Maven Webapp,com.ring.service,VehicleServiceImpl,32,46,2,2,8,15,5,5,3,5
+tyreinflator-service Maven Webapp,com.ring.service,LoginServiceImpl,0,38,0,0,0,10,0,3,0,3
+tyreinflator-service Maven Webapp,com.ring.service,TyrePressureServiceImpl,6,184,1,1,1,39,1,11,0,11
+tyreinflator-service Maven Webapp,com.ring.service,UserServiceImpl,27,303,4,14,6,72,4,20,0,15
+tyreinflator-service Maven Webapp,com.ring.service,SavingServiceImpl,65,0,4,0,14,0,4,0,2,0
+tyreinflator-service Maven Webapp,com.ring.util,UserProfileBoValidator,65,0,6,0,18,0,9,0,6,0
+tyreinflator-service Maven Webapp,com.ring.util,ClientInfoValidator,30,0,0,0,7,0,4,0,4,0
+tyreinflator-service Maven Webapp,com.ring.util,SavingUtil,71,0,12,0,14,0,10,0,3,0
+tyreinflator-service Maven Webapp,com.ring.util,VehicleInfoValidator,149,0,8,0,38,0,14,0,10,0
+tyreinflator-service Maven Webapp,com.ring.util,ClientBoValidator,23,0,0,0,7,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.util,DaoUtil.new RowMapper() {...},15,0,0,0,2,0,2,0,2,0
+tyreinflator-service Maven Webapp,com.ring.util,DaoUtil,48,7,0,0,5,3,2,1,2,1
+tyreinflator-service Maven Webapp,com.ring.util,VehicleBoValidator,252,0,10,0,47,0,9,0,4,0
+tyreinflator-service Maven Webapp,com.ring.util,ResponseUtil,72,0,0,0,20,0,6,0,6,0
+tyreinflator-service Maven Webapp,com.ring.util,UserInfoValidator,91,0,8,0,20,0,9,0,5,0
+tyreinflator-service Maven Webapp,com.ring.util,PressureBoValidator,29,0,0,0,7,0,2,0,2,0
+tyreinflator-service Maven Webapp,com.ring.util,BoValidator,20,0,6,0,7,0,6,0,3,0
+tyreinflator-service Maven Webapp,com.ring.util,AutoDataInfoValidator,39,0,0,0,9,0,5,0,5,0
+tyreinflator-service Maven Webapp,com.ring.util,PressureInfoValidator,48,0,0,0,11,0,6,0,6,0
+tyreinflator-service Maven Webapp,com.ring.controller,TyrePressureController,32,0,0,0,7,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.controller,RecoverAccountController,0,36,0,0,0,11,0,3,0,3
+tyreinflator-service Maven Webapp,com.ring.controller,VehicleController,0,116,0,0,0,24,0,8,0,8
+tyreinflator-service Maven Webapp,com.ring.controller,SavingController,18,0,0,0,3,0,2,0,2,0
+tyreinflator-service Maven Webapp,com.ring.controller,AppCoreController,22,94,2,2,6,27,4,5,2,5
+tyreinflator-service Maven Webapp,com.ring.controller,UserController,0,58,0,0,0,13,0,4,0,4
+tyreinflator-service Maven Webapp,com.ring.config,FacebookConfig,24,0,0,0,10,0,7,0,7,0
+tyreinflator-service Maven Webapp,com.ring.config,AppCoreConfig,47,0,0,0,12,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.config,UrlProvider,24,0,0,0,10,0,7,0,7,0
+tyreinflator-service Maven Webapp,com.ring.config,MailProperties,10,0,0,0,4,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.dao.util,QueryBuilder,3,279,3,7,1,52,4,10,1,8
+tyreinflator-service Maven Webapp,com.ring.bo,DocumentTypeBo,10,0,0,0,4,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.bo,PressureBo,21,45,0,0,9,19,6,13,6,13
+tyreinflator-service Maven Webapp,com.ring.bo,SocialLoginBo,0,17,0,0,0,7,0,5,0,5
+tyreinflator-service Maven Webapp,com.ring.bo,SavingBo,52,0,0,0,22,0,15,0,15,0
+tyreinflator-service Maven Webapp,com.ring.bo,ResetCredentialsBo,7,24,0,0,3,10,2,7,2,7
+tyreinflator-service Maven Webapp,com.ring.bo,VehicleBo,46,69,0,0,20,29,13,20,13,20
+tyreinflator-service Maven Webapp,com.ring.bo,NextScreenInformationBo,9,15,0,0,3,7,3,4,3,4
+tyreinflator-service Maven Webapp,com.ring.bo,UserBo,0,24,0,0,0,10,0,7,0,7
+tyreinflator-service Maven Webapp,com.ring.bo,ClientBo,0,17,0,0,0,7,0,5,0,5
+tyreinflator-service Maven Webapp,com.ring.bo,UserProfileBo,50,37,0,0,22,15,14,11,14,11
+tyreinflator-service Maven Webapp,com.ring.bo,VehicleAutoDataBo,0,31,0,0,0,13,0,9,0,9
+tyreinflator-service Maven Webapp,com.ring.bo,BaseBo,0,3,0,0,0,1,0,1,0,1
+tyreinflator-service Maven Webapp,com.ring.bo,ResponseDataBo,3,24,0,0,1,4,1,3,1,3
+tyreinflator-service Maven Webapp,com.ring.bo,ResponseBo,6,28,0,0,2,6,2,4,2,4
+tyreinflator-service Maven Webapp,com.ring,Application,17,0,0,0,4,0,3,0,3,0
+tyreinflator-service Maven Webapp,com.ring.dao,UserDaoImpl.new PreparedStatementCreator() {...},0,93,0,0,0,17,0,2,0,2
+tyreinflator-service Maven Webapp,com.ring.dao,VehicleDaoImpl.new PreparedStatementCreator() {...},0,59,0,0,0,10,0,2,0,2
+tyreinflator-service Maven Webapp,com.ring.dao,VehicleDaoImpl.new PreparedStatementCreator() {...},19,119,1,1,6,21,1,2,0,2
+tyreinflator-service Maven Webapp,com.ring.dao,VehicleDaoImpl.new PreparedStatementCreator() {...},3,63,0,0,2,14,0,2,0,2
+tyreinflator-service Maven Webapp,com.ring.dao,VehicleDaoImpl.new PreparedStatementCreator() {...},0,83,0,0,0,13,0,2,0,2
+tyreinflator-service Maven Webapp,com.ring.dao,TyrePressureDaoImpl,2,190,0,0,0,25,1,4,1,4
+tyreinflator-service Maven Webapp,com.ring.dao,LoginDaoImpl,0,24,0,0,0,4,0,2,0,2
+tyreinflator-service Maven Webapp,com.ring.dao,RecoverAccountDaoImpl,0,168,0,0,0,22,0,6,0,6
+tyreinflator-service Maven Webapp,com.ring.dao,VehicleDaoImpl,1057,0,48,0,204,0,57,0,33,0
+tyreinflator-service Maven Webapp,com.ring.dao,UserDaoImpl,135,134,2,2,22,17,8,4,7,3
+tyreinflator-service Maven Webapp,com.ring.oauth,AuthorizationServerConfig,48,0,0,0,16,0,6,0,6,0
+tyreinflator-service Maven Webapp,com.ring.oauth,ResourceServerConfig,69,0,0,0,16,0,4,0,4,0
+tyreinflator-service Maven Webapp,com.ring.oauth,OAuthUser,7,26,0,0,3,6,2,2,2,2
+tyreinflator-service Maven Webapp,com.ring.oauth,CustomTokenEnhancer,49,0,0,0,12,0,2,0,2,0
+tyreinflator-service Maven Webapp,com.ring.aspect,LoggingAspect,136,0,4,0,21,0,4,0,2,0
+tyreinflator-service Maven Webapp,com.ring.constants,LoadType,29,52,4,0,4,6,4,4,2,4
+tyreinflator-service Maven Webapp,com.ring.constants,GenderType,38,59,4,0,6,6,6,3,4,3
+tyreinflator-service Maven Webapp,com.ring.constants,RingMessageCode,9,339,0,0,0,34,2,2,2,2
+tyreinflator-service Maven Webapp,com.ring.constants,TokenType,34,30,4,0,6,6,5,4,3,4
+tyreinflator-service Maven Webapp,com.ring.constants,UrlConstantsBo,7,0,0,0,2,0,2,0,2,0
+tyreinflator-service Maven Webapp,com.ring.constants,Status,29,52,4,0,4,6,4,4,2,4
+tyreinflator-service Maven Webapp,com.ring.constants,LoginType,9,62,2,2,1,9,3,5,1,5
+tyreinflator-service Maven Webapp,com.ring.constants,AppConstant,3,22,0,0,1,7,1,1,1,1
+tyreinflator-service Maven Webapp,com.ring.constants,PressureUnitType,33,48,4,0,4,6,5,3,3,3
+tyreinflator-service Maven Webapp,com.ring.constants,ScreenType,92,0,4,0,10,0,8,0,6,0
+tyreinflator-service Maven Webapp,com.ring.exceptions,GlobalExceptionHandler,79,0,0,0,27,0,4,0,4,0
+tyreinflator-service Maven Webapp,com.ring.exceptions,RingResponseCode,15,144,0,0,1,15,3,2,3,2
+tyreinflator-service Maven Webapp,com.ring.exceptions,RingException,55,12,0,0,21,5,7,2,7,2
+tyreinflator-service Maven Webapp,com.ring.exceptions,RingErrorCode,9,669,0,0,0,67,2,2,2,2
